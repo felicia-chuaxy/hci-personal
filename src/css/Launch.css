@@ -1,0 +1,54 @@
+.launch {
+  height: 100%;
+  position: relative;
+}
+.launch-bg {
+  width: 100%;
+  height: 80%;
+  object-fit: fill;
+  position: absolute;
+  inset: 0;
+}
+.launch-brand {
+  position: absolute;
+  top: 14%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.launch-brand img {
+  width: 55%;
+  height: auto;
+}
+.launch-brand p {
+  color: white;
+  font-size: 13px;
+  margin: 0;
+}
+.launch-actions {
+  position: absolute;
+  bottom: 10%;
+  left: 8%;
+  right: 8%;
+  display: grid;
+  gap: 18px;
+}
+.primary,
+.secondary {
+  width: 100%;
+  height: 49px;
+  border-radius: 30px;
+  font-weight: 700;
+  border: 1px solid #bbb;
+}
+.primary {
+  background: #00a651;
+  color: white;
+  border-color: #00a651;
+}
+.secondary {
+  background: white;
+  color: #333;
+}

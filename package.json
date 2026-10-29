@@ -1,0 +1,22 @@
+{
+  "name": "grabair-mobile",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "lucide-react": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-leaflet": "^5.0.0",
+    "vite": "*"
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.10"
+  }
+}

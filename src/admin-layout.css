@@ -1,0 +1,30 @@
+/* ==========================================
+   TWO-PHONE PREVIEW
+========================================== */
+
+.dual-preview {
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 44px;
+  flex-wrap: wrap;
+  padding: 30px 20px 60px;
+  background: #edf2ef;
+  box-sizing: border-box;
+}
+
+.preview-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.preview-column > h2 {
+  font: 700 18px system-ui;
+  color: #20392e;
+  margin: 0;
+}
+
