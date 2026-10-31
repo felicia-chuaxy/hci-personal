@@ -1,0 +1,224 @@
+
+/*========== GLOBAL BOOKING PAGE STYLES ==========*/
+.booking-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow: hidden;
+  color: #101510;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.booking-page button {
+  font-family: inherit;
+}
+
+/* =========================================================
+   2. BOOKING HEADER
+   ========================================================= */
+
+/* Header layout */
+.booking-header {
+  height: 101px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 19px;
+  position: relative;
+}
+
+/* Header title */
+.booking-header h1 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 750;
+}
+
+/* Back navigation button */
+.booking-header > button {
+  position: absolute;
+  left: 18px;
+  bottom: 15px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  color: #777;
+  padding: 5px;
+}
+
+/* =========================================================
+   3. REUSABLE BOOKING BUTTONS
+   ========================================================= */
+
+/* Primary green button */
+.booking-primary {
+  height: 46px;
+  width: 100%;
+  border: 0;
+  border-radius: 24px;
+  background: #00a651;
+  color: white;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+/* Secondary outline button */
+.booking-outline {
+  height: 45px;
+  width: 100%;
+  border: 1px solid #9db7a8;
+  border-radius: 24px;
+  background: transparent;
+  font-size: 13px;
+  color: #333;
+  font-weight: 650;
+}
+
+/* =========================================================
+   4. BOOKING FOOTER
+   ========================================================= */
+
+/* Footer container */
+.booking-footer {
+  margin-top: auto;
+  padding: 12px 24px 32px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+/* Compact footer variation */
+.booking-footer.compact {
+  padding-top: 8px;
+}
+
+/* =========================================================
+   5. VEHICLE DETAILS PAGE
+   ========================================================= */
+
+/* Vehicle image container */
+.vehicle-photo {
+  height: 42%;
+  position: relative;
+  overflow: hidden;
+  background: #e7f7eb;
+  flex-shrink: 0;
+}
+
+/* Vehicle image */
+.vehicle-photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Back button displayed over vehicle image */
+.photo-back {
+  position: absolute;
+  top: 65px;
+  left: 14px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffffe9;
+  color: #333;
+}
+
+/* Vehicle information card */
+.vehicle-info {
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 22px;
+  margin-top: 10px;
+  position: relative;
+  flex: 1;
+}
+
+/* Vehicle name */
+.vehicle-info h1 {
+  font-size: 19px;
+  margin: 0 0 6px;
+}
+
+/* Vehicle description */
+.vehicle-info p {
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0 0 23px;
+  color: #555;
+}
+
+/* =========================================================
+   6. VEHICLE FEATURES
+   ========================================================= */
+
+/* Features grid layout */
+.vehicle-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px 10px;
+}
+
+/* Individual feature */
+.vehicle-feature {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+/* Feature icon circle */
+.vehicle-feature > span {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #d7f9e4;
+  color: #14864c;
+}
+
+/* Feature description */
+.vehicle-feature small {
+  font-size: 10px;
+  color: #444;
+}
+
+/* =========================================================
+   7. FARE SUMMARY
+   ========================================================= */
+
+/* Fare information container */
+.fare-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+/* Fare amount */
+.fare-summary strong {
+  font-size: 14px;
+}
+
+/* Fare description */
+.fare-summary span {
+  font-size: 10px;
+  color: #666;
+}
+
+/* Fare dropdown indicator */
+.fare-summary .fare-chevron {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  font-size: 24px;
+}
+
+
+

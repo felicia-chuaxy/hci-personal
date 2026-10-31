@@ -1,0 +1,126 @@
+.needs header,
+.results header {
+  height: 108px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 17px;
+  position: relative;
+  flex-shrink: 0;
+}
+.needs header button,
+.results header button {
+  position: absolute;
+  left: 25px;
+  bottom: 14px;
+  background: none;
+  border: 0;
+  color: #888;
+}
+.needs header h2,
+.results header h2 {
+  font-size: 17px;
+  margin: 0;
+}
+.needs > p {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 20px 27px 24px;
+}
+.option-list {
+  display: grid;
+  gap: 18px;
+  padding: 0 24px;
+}
+.need-option {
+  height: 62px;
+  border: 2px solid #b9b9b9;
+  border-radius: 19px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  gap: 18px;
+  padding: 0 14px;
+}
+.need-option.selected {
+  border-color: #00a651;
+}
+.need-icon {
+  color: #087340;
+  flex-shrink: 0;
+}
+.need-option > span:nth-child(2) {
+  flex: 1;
+}
+.need-option b {
+  font-size: 13px;
+}
+.need-option small {
+  display: block;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.check {
+  background: #00bd19;
+  color: white;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.needs-actions {
+  margin-top: auto;
+  padding: 0 29px 35px;
+  display: grid;
+  gap: 14px;
+}
+.results-body {
+  padding: 25px;
+}
+.results-body h2 {
+  font-size: 20px;
+}
+.results-body p {
+  font-size: 13px;
+  color: #777;
+}
+.ride {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 2px solid #00a651;
+  border-radius: 18px;
+  padding: 18px 12px;
+  margin: 30px 0;
+}
+.ride div {
+  flex: 1;
+}
+.ride small {
+  display: block;
+  color: #777;
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+/* Enabled button */
+.needs-actions .primary {
+  background-color: #00b14f;
+  color: white;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+/* Disabled button */
+.needs-actions .primary:disabled {
+  border: 1px solid white;
+  background-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 1;
+  box-shadow: none;
+}
