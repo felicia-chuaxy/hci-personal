@@ -1,0 +1,789 @@
+/* 1. Common Leaflet behaviour and destination / pickup pins */
+.confirm-route-map .leaflet-container,
+.track-route-map .leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0;
+}
+.confirm-route-map .custom-marker,
+.track-route-map .custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+.confirm-route-map .custom-marker .pin,
+.track-route-map .custom-marker .pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 4px;
+  transform: rotate(-45deg);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+.confirm-route-map .pin-pickup,
+.track-route-map .pin-pickup {
+  background: #00a651 !important;
+}
+.confirm-route-map .pin-dropoff,
+.track-route-map .pin-dropoff {
+  background: #f04444 !important;
+}
+.confirm-route-map .pin-center,
+.track-route-map .pin-center {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* 2. ConfirmRide map (retains original size) */
+.confirm-page .route-map {
+  position: relative;
+  width: 100%;
+  height: 35%;
+  min-height: 200px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #f5f7f5;
+  border-bottom: 1px solid #eee;
+}
+.confirm-page .route-map-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.confirm-route-map {
+  position: relative;
+  width: 100%;
+  height: 255px;
+  min-height: 255px;
+  flex-shrink: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e9f0eb;
+}
+.confirm-map-loading {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 500;
+  padding: 9px 15px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+.confirm-map-error {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 500;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #b42318;
+  font-size: 12px;
+  text-align: center;
+}
+.map-label {
+  position: absolute;
+  z-index: 2;
+  max-width: 140px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #fff;
+  color: #242424;
+  font-size: 10px;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.map-label.start {
+  top: 11%;
+  left: 40%;
+  transform: translateX(-50%);
+}
+.map-label.finish {
+  bottom: 35%;
+  right: 30%;
+  transform: translateX(50%);
+}
+
+
+
+
+/* 03. MAP CONTAINERS & ARTWORK */
+.tracking-map {
+  width: 100%;
+  height: 46%;
+  min-height: 235px;
+  flex-shrink: 1;
+  position: relative;
+  overflow: hidden;
+  background: #e9f6ec;
+  isolation: isolate;
+}
+
+.tracking-map-illustrated {
+  background: #e9f6ec;
+}
+
+.tracking-map-canvas {
+  position: relative;
+
+  width: 100%;
+
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.tracking-map-art {
+  position: absolute;
+
+  inset: 0;
+
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: fill;
+
+  user-select: none;
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+.navigation-page .tracking-map {
+  height: 51%;
+
+  min-height: 270px;
+}
+
+.tracking-map-walking .tracking-map-location {
+  left: 21%;
+}
+
+.track-route-map {
+  position: relative;
+
+  width: 100%;
+
+  height: 38%;
+
+  min-height: 220px;
+
+  overflow: hidden;
+
+  flex-shrink: 0;
+
+  z-index: 0;
+}
+
+.track-map-loading {
+  position: absolute;
+
+  top: 15px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 500;
+
+  padding: 9px 15px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  color: #444;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+
+  white-space: nowrap;
+}
+
+.track-map-error {
+  position: absolute;
+
+  top: 15px;
+
+  left: 15px;
+
+  right: 15px;
+
+  z-index: 500;
+
+  padding: 12px;
+
+  background: #fff0f0;
+
+  border: 1px solid #f0b4b4;
+
+  border-radius: 12px;
+
+  color: #c0392b;
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+
+
+/* 04. MAP PICKUP & ROUTE MARKERS */
+.map-pickup-label,
+.tracking-map-location {
+  position: absolute;
+
+  top: 10%;
+
+  left: 29%;
+
+  transform: translateX(20%);
+
+  z-index: 6;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  max-width: 65%;
+
+  padding: 7px 10px;
+
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  color: #1c2520;
+
+  white-space: nowrap;
+}
+
+.map-pickup-label svg {
+  flex-shrink: 0;
+}
+
+.map-pickup-label span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.map-route-marker {
+  position: absolute;
+
+  z-index: 4;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+}
+
+.map-marker-dot {
+  display: block;
+
+  width: 14px;
+
+  height: 14px;
+
+  border-radius: 50%;
+
+  border: 3px solid white;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.map-marker-dot.pickup {
+  background: #00a651;
+}
+
+.map-marker-dot.destination {
+  background: #e74c3c;
+}
+
+.map-marker-label {
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 7px 11px;
+
+  border-radius: 10px;
+
+  background: white;
+
+  color: #222;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+.map-route-pickup .map-marker-label {
+  color: #008e4b;
+}
+
+.map-route-destination .map-marker-label {
+  color: #d94444;
+}
+
+.track-route-map .shuttle-map-icon {
+  background: transparent;
+
+  border: none;
+}
+
+.track-route-map .shuttle-marker {
+  position: relative;
+
+  width: 30px;
+
+  height: 30px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.track-route-map .shuttle-marker img {
+  position: relative;
+
+  z-index: 2;
+
+  width: 43px;
+
+  height: 43px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+}
+
+.track-route-map .shuttle-marker-pulse {
+  position: absolute;
+
+  width: 38px;
+
+  height: 38px;
+
+  border-radius: 50%;
+
+  background: rgba(0, 166, 81, 0.15);
+
+  border: 2px solid rgba(0, 166, 81, 0.35);
+
+  animation: shuttlePulse 2s ease-in-out infinite;
+}
+
+@keyframes shuttlePulse {
+  0%,
+  100% {
+    transform: scale(0.85);
+
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.4);
+
+    opacity: 0.3;
+  }
+}
+
+
+
+/* 05. SHUTTLE MARKER & ANIMATIONS */
+.map-moving-shuttle {
+  position: absolute;
+
+  width: 44px;
+
+  height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 6;
+
+  pointer-events: none;
+
+  transition:
+    left 0.8s linear,
+    top 0.8s linear;
+
+  will-change: left, top;
+}
+
+.map-moving-shuttle .map-small-shuttle {
+  position: relative;
+
+  z-index: 3;
+
+  width: 38px;
+
+  height: 38px;
+
+  display: block;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+
+  user-select: none;
+
+  pointer-events: none;
+}
+
+.map-shuttle-halo {
+  position: absolute;
+
+  z-index: 1;
+
+  width: 39px;
+
+  height: 39px;
+
+  border-radius: 50%;
+
+  background: rgba(0, 166, 81, 0.23);
+
+  border: 2px solid rgba(0, 166, 81, 0.45);
+
+  pointer-events: none;
+
+  animation: shuttle-map-pulse 1.8s ease-in-out infinite;
+}
+
+.map-shuttle-halo::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(0, 166, 81, 0.35);
+
+  animation: shuttle-map-ring 1.8s ease-out infinite;
+}
+
+@keyframes shuttle-map-pulse {
+  0% {
+    transform: scale(0.75);
+
+    opacity: 0.85;
+  }
+
+  50% {
+    transform: scale(1.45);
+
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(0.75);
+
+    opacity: 0.85;
+  }
+}
+
+@keyframes shuttle-map-ring {
+  0% {
+    transform: scale(0.65);
+
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.5);
+
+    opacity: 0;
+  }
+}
+
+.map-moving-shuttle.is-arrived .map-shuttle-halo,
+.map-moving-shuttle.is-arrived .map-shuttle-halo::after {
+  animation: none;
+}
+
+.map-moving-shuttle.is-arrived .map-shuttle-halo {
+  transform: scale(1);
+
+  opacity: 0.65;
+
+  background: rgba(0, 166, 81, 0.25);
+
+  border-color: #00a651;
+}
+
+.map-moving-shuttle.is-arrived .map-small-shuttle {
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.25));
+}
+
+.map-shuttle-marker {
+  position: absolute;
+
+  width: 42px;
+
+  height: 42px;
+
+  object-fit: contain;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 5;
+
+  filter: drop-shadow(0 2px 3px #0005);
+
+  transition:
+    top 0.8s linear,
+    left 0.8s linear;
+}
+
+.map-shuttle-marker.is-confirmed {
+  left: 71.2%;
+
+  top: 64.2%;
+}
+
+.map-shuttle-marker.is-onway {
+  left: 47%;
+
+  top: 43%;
+}
+
+.map-shuttle-marker.is-arrived {
+  left: 27.3%;
+
+  top: 18.7%;
+}
+
+
+
+/* 06. MAP LIVE STATUS & ETA */
+.map-live-badge {
+  position: absolute;
+
+  top: 12px;
+
+  right: 12px;
+
+  z-index: 10;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 7px 10px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.3px;
+
+  color: #078349;
+
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.12);
+}
+
+.map-live-dot {
+  width: 8px;
+
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #00a651;
+
+  animation: map-live-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes map-live-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px #d8f4e3;
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px #d8f4e355;
+  }
+}
+
+.map-floating-estimate {
+  position: absolute;
+
+  bottom: 30px;
+
+  left: 14px;
+
+  z-index: 10;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 8px 8px;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.14);
+}
+
+.map-eta-icon {
+  display: grid;
+
+  place-items: center;
+
+  color: #008b4b;
+}
+
+.map-floating-estimate > span:last-child {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.map-floating-estimate b {
+  font-size: 10px;
+
+  font-weight: 800;
+
+  color: #171b18;
+}
+
+.map-floating-estimate small {
+  font-size: 8px;
+
+  font-weight: 500;
+
+  color: #68756e;
+}
+
+/* Walking navigation map overlay */
+.walking-you {
+  position: absolute;
+
+  right: 4%;
+
+  bottom: 21%;
+
+  z-index: 6;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 3px;
+
+  padding: 5px;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px #0000001c;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+/* TRIP EN ROUTE — PICKUP AND DESTINATION PINS */
+
+.journey-route-map .custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.journey-route-map .custom-marker .pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 4px;
+  transform: rotate(-45deg);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.journey-route-map .pin-pickup {
+  background: #00a651 !important;
+}
+
+.journey-route-map .pin-dropoff {
+  background: #f04444 !important;
+}
+
+.journey-route-map .pin-center {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+}

@@ -1,0 +1,608 @@
+/* 01. Screen layout */
+.where,
+.needs,
+.results {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.where-body {
+  flex: 1;
+  padding: 22px 18px 90px;
+  overflow: auto;
+}
+
+.where-body h2 {
+  font-size: 17px;
+  margin: 0 0 20px;
+}
+
+.where-body h3 {
+  font-size: 14px;
+  margin: 22px 0 3px;
+}
+
+/* 02. Hero illustration */
+.hero {
+  height: 29%;
+  position: relative;
+  overflow: hidden;
+  background: #9ee7f7;
+}
+
+.hero > img {
+  margin-top: 10px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 90%;
+}
+
+
+/* 03. Location fields */
+.location-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid #bbb;
+  border-radius: 20px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  min-height: 62px;
+}
+
+.location-card > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 3px;
+  min-width: 0;
+}
+
+.location-card small {
+  color: #888;
+  font-size: 10px;
+}
+
+.location-card input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  font-size: 12px;
+  background: transparent;
+}
+
+.location-card b {
+  font-size: 12px;
+}
+
+.where-pin-button {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: #00a651;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* 04. Autocomplete and validation */
+.location-search-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.location-search-wrapper .location-card {
+  margin-bottom: 0;
+}
+
+.location-search-wrapper .location-card > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.location-search-wrapper input {
+  width: 100%;
+  min-width: 0;
+}
+
+.location-suggestions {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #e5ece8;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  max-height: 270px;
+  overflow-y: auto;
+}
+
+.location-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #f0f2f0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.location-suggestion:hover {
+  background: #f0faf4;
+}
+
+.location-suggestion > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.location-suggestion strong {
+  display: block;
+  font-size: 13px;
+  color: #202b25;
+  line-height: 1.4;
+}
+
+.location-suggestion small {
+  display: block;
+  font-size: 11px;
+  color: #8a9690;
+  margin-top: 3px;
+}
+
+.location-suggestion > svg:last-child {
+  flex-shrink: 0;
+  color: #9ca8a0;
+}
+
+.location-search-message {
+  padding: 14px;
+  margin: 0;
+  font-size: 12px;
+  color: #777;
+}
+
+.location-error {
+  color: #d33c3c;
+}
+
+.location-validation {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #b45b23;
+  margin: 12px 0;
+}
+
+.location-spinner {
+  animation: location-spin 0.9s linear infinite;
+  color: #00a651;
+}
+
+
+/* 05. Recent locations */
+.recent {
+  border: 0;
+  border-bottom: 1px solid #bbb;
+  background: white;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  text-align: left;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+
+/* 07. Interactive map */
+.where-map-section {
+  width: 100%;
+  margin-top: 20px;
+  background: #ffffff;
+  border: 1px solid #e9efea;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.where-map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 12px;
+}
+
+.where-map-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #172d20;
+}
+
+.where-map-header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #7a8980;
+}
+
+.where-map-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #e9f8ee;
+  color: #008d45;
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.where-map-container {
+  width: 100%;
+  height: 250px;
+  min-height: 250px;
+  position: relative;
+  overflow: hidden;
+  background: #e8f0ea;
+}
+
+.where-map-container .leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.where-map-pick-tip {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: white;
+  border-radius: 30px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #176438;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.where-map-pick-tip button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.where-map-loading {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: white;
+  border-radius: 20px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+/* 08. Route information */
+.where-route-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #edf0ed;
+  padding: 14px;
+  gap: 12px;
+}
+
+.where-route-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.where-route-stat div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.where-route-stat strong {
+  font-size: 14px;
+  color: #172d20;
+}
+
+.where-route-stat small {
+  font-size: 11px;
+  color: #89948c;
+}
+
+.where-route-warning,
+.where-route-error {
+  padding: 0 15px 12px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.where-route-warning {
+  color: #9a6700;
+}
+
+.where-route-error {
+  color: #d43737;
+}
+
+
+/* 09. Continue button */
+.where-continue-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  margin: 18px 0 24px;
+  border: none;
+  border-radius: 14px;
+  background: #00a651;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.where-continue-button:hover:not(:disabled) {
+  background: #008e45;
+  transform: translateY(-1px);
+}
+
+.where-continue-button:disabled {
+  background: #b9d7c4;
+  cursor: not-allowed;
+}
+
+
+/* 10. Confirmation dialog */
+.location-confirm-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #122c1b88;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+.location-confirm-dialog {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 18px 60px #0003;
+  padding: 25px 20px 20px;
+  text-align: center;
+}
+
+.location-confirm-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  background: #00a651;
+  font-size: 23px;
+  font-weight: 700;
+  margin: 0 auto 12px;
+}
+
+.location-confirm-dialog h2 {
+  font-size: 18px;
+  margin: 0 0 7px;
+}
+
+.location-confirm-dialog p {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+.location-confirm-route {
+  text-align: left;
+  background: #f2fbf5;
+  padding: 13px 15px;
+  border-radius: 13px;
+  margin-bottom: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.location-confirm-route div {
+  display: grid;
+  gap: 4px;
+}
+
+.location-confirm-route strong {
+  font-size: 10px;
+  color: #07804b;
+}
+
+.location-confirm-route span {
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.location-confirm-yes,
+.location-confirm-edit {
+  height: 43px;
+  width: 100%;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.location-confirm-yes {
+  background: #00a651;
+  color: #fff;
+  border: 0;
+}
+
+.location-confirm-edit {
+  background: white;
+  color: #333;
+  border: 1px solid #ccc;
+  margin-top: 9px;
+}
+
+
+/* 11. Animations */
+.where-spin {
+  animation: whereRotate 1s linear infinite;
+}
+
+@keyframes whereRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes location-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+/* RECENT LOCATIONS */
+.recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.recent-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Clear history */
+
+.recent-clear {
+  border: none;
+  background: transparent;
+  color: #00a651;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.recent-clear:hover {
+  color: #008d45;
+}
+
+/* Recent location row */
+.recent {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.recent:hover {
+  background: #f5faf6;
+}
+
+.recent:active {
+  background: #eaf6ed;
+}
+
+/* Clock */
+
+.recent-clock {
+  flex-shrink: 0;
+  color: #7b8794;
+}
+
+/* Location name */
+.recent-location-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: #2a3430;
+  font-size: 14px;
+}
+
+/* Arrow */
+.recent-chevron {
+  flex-shrink: 0;
+  color: #a0aba4;
+  margin-left: auto;
+}
+
+/* Empty history */
+.recent-empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 12px;
+  color: #9ca3af;
+  font-size: 13px;
+  background: #f8faf8;
+  border-radius: 12px;
+}
+
+.recent-empty svg {
+  flex-shrink: 0;
+  color: #aeb8b1;
+}
