@@ -6,6 +6,9 @@ import LocationSelection from "./screens/LocationSelection.jsx";
 import TravelNeeds from "./screens/TravelNeeds.jsx";
 import SuitableVehicle from "./screens/SuitableVehicles.jsx";
 import VehicleDetails from "./screens/VehicleDetails.jsx";
+import BookSeat from "./screens/BookSeat.jsx";
+import ConfirmRide from "./screens/ConfirmRide.jsx";
+
 
 // Import CSS
 import "./admin-layout.css";
@@ -42,6 +45,9 @@ export default function App() {
 
   // Vehicle Seat
   const [seat, setSeat] = useState(null);
+
+  // Confirm Booking
+  const [bookingRoute, setBookingRoute] = useState(null);
 
 
   // Passenger screens
@@ -106,9 +112,37 @@ export default function App() {
           if (selectedId === "shuttle" || selectedId === "compact") {
             setPage("seat");
           } else {
-            setPage("confirm");
+            setPage("");
           }
         }}
+      />
+    ),
+
+    seat: (
+      <BookSeat
+        selectedRide={vehicle}
+        pickup={pickup}
+        destination={destination}
+        seat={seat}
+        setSeat={setSeat}
+        onBack={() => setPage("details")}
+        onContinue={() => setPage("confirm")}
+      />
+    ),
+
+    confirm: (
+      <ConfirmRide
+        pickup={pickup}
+        destination={destination}
+        seat={seat}
+        selectedRide={vehicle}
+        setBookingRoute={setBookingRoute}
+        onBack={() =>
+          setPage(
+            vehicle === "shuttle" || vehicle === "compact" ? "seat" : "details",
+          )
+        }
+        onContinue={() => setPage("booked")}
       />
     ),
   };
