@@ -1,0 +1,772 @@
+/* =========================================
+   1. GENERAL PAGE LAYOUT
+========================================= */
+
+.guide-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #ffffff;
+  color: #202522;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  box-sizing: border-box;
+}
+
+.guide-page *,
+.guide-page *::before,
+.guide-page *::after {
+  box-sizing: border-box;
+}
+
+.guide-page button {
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+   2. HEADER
+========================================= */
+
+.guide-header {
+  height: 105px;
+  min-height: 105px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0 20px 21px;
+  position: relative;
+  background: transparent;
+  z-index: 2;
+}
+
+.guide-header strong {
+  font-size: 15px;
+  font-weight: 750;
+  color: #202522;
+}
+
+.guide-header > button {
+  position: absolute;
+  left: 19px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+
+  background: #eaf7ef;
+  color: #12442e;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.guide-header > button:hover {
+  background: #f0f5f2;
+}
+
+/* =========================================
+   3. SETTINGS PAGE
+========================================= */
+
+.guide-settings {
+  background: #edfff5;
+}
+
+.guide-settings-content {
+  padding: 27px 27px 0;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.guide-label {
+  display: block;
+  font-weight: 750;
+  font-size: 14px;
+  margin-bottom: 13px;
+}
+
+/* Text size options */
+
+.guide-size-options {
+  display: flex;
+  background: #f8fdf9;
+  padding: 3px;
+  border-radius: 5px;
+  gap: 2px;
+  margin-bottom: 35px;
+}
+
+.guide-size-options button {
+  flex: 1;
+  height: 31px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 10px;
+  color: #202522;
+  cursor: pointer;
+}
+
+.guide-size-options button.selected {
+  background: #00a651;
+  color: #ffffff;
+  font-weight: 750;
+}
+
+/* Audio settings */
+
+.guide-audio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.guide-audio-row strong {
+  font-size: 13px;
+}
+
+.guide-audio-row p {
+  font-size: 10px;
+  margin: 8px 0 0;
+}
+
+/* Toggle */
+
+.guide-toggle {
+  width: 48px;
+  height: 26px;
+  border: 0;
+  border-radius: 20px;
+  background: #c4cbc7;
+  padding: 3px;
+  flex: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.guide-toggle.on {
+  background: #00a651;
+}
+
+.guide-toggle span {
+  display: block;
+  background: #ffffff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.guide-toggle.on span {
+  transform: translateX(22px);
+}
+
+/* Language selection */
+
+.guide-select {
+  height: 40px;
+  border: 1px solid #b8d0c2;
+  border-radius: 10px;
+  position: relative;
+  margin-bottom: 34px;
+}
+
+.guide-select select {
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: 0;
+  background: transparent;
+  color: #333333;
+  font-size: 12px;
+  font-weight: 700;
+  outline: 0;
+  cursor: pointer;
+}
+
+.guide-select svg {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  pointer-events: none;
+  color: #697970;
+}
+
+/* Skyline illustration */
+
+.guide-skyline {
+  height: 110px;
+  flex: none;
+  overflow: hidden;
+  margin-top: auto;
+}
+
+.guide-skyline img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: bottom;
+}
+
+/* =========================================
+   4. FOOTER
+========================================= */
+
+.guide-footer {
+  padding: 18px 25px 28px;
+  flex: none;
+  background: inherit;
+  position: relative;
+  z-index: 2;
+}
+
+.guide-primary {
+  width: 100%;
+  min-height: 47px;
+  border: 0;
+  border-radius: 26px;
+  background: #00a651;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.guide-primary:hover {
+  background: #008f46;
+}
+
+.guide-primary:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+   5. SAFETY INSTRUCTIONS PAGE
+========================================= */
+
+.guide-safety {
+  background: #ffffff;
+}
+
+/* Scrollable content */
+
+.guide-safety .safety-scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px 27px;
+  scrollbar-width: none;
+}
+
+.guide-safety .safety-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* Introduction */
+
+.safety-intro {
+  text-align: center;
+  line-height: 1.55;
+  font-size: 15px;
+  font-weight: 400;
+  color: #202522;
+  margin: 9px 0 15px;
+}
+
+/* =========================================
+   6. DYNAMIC SAFETY IMAGE
+========================================= */
+
+.guide-safety .safety-illustration {
+  width: 82%;
+  height: 172px;
+  margin: 0 auto;
+  border-radius: 21px;
+  background: #e9f8f0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Image changes based on selected step */
+
+.guide-safety .safety-slide-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  animation: safetyImageFade 0.35s ease-in-out;
+}
+
+/* Also supports the original image markup */
+
+.guide-safety .safety-illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Smooth image transition */
+
+@keyframes safetyImageFade {
+  0% {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================================
+   7. SAFETY NAVIGATION DOTS
+========================================= */
+
+.safety-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 0 12px;
+}
+
+.safety-dots button {
+  padding: 0;
+  border: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #b6b6b6;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    width 0.25s ease,
+    transform 0.25s ease;
+}
+
+.safety-dots button.active {
+  width: 22px;
+  border-radius: 10px;
+  background: #008b4a;
+}
+
+.safety-dots button:hover {
+  background: #62c994;
+}
+
+/* =========================================
+   8. SAFETY INSTRUCTION LIST
+========================================= */
+
+.safety-instructions {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* Individual instruction */
+
+.safety-row {
+  width: 100%;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  text-align: left;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  padding: 8px 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  min-height: 57px;
+  color: #202522;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    padding 0.25s ease;
+}
+
+/* Selected instruction */
+
+.safety-row.current {
+  background: #f0fbf5;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Hover */
+
+.safety-row:hover {
+  background: #f6fbf8;
+}
+
+/* Instruction icon */
+
+.safety-walk {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  flex: none;
+  border-radius: 50%;
+  background: #c9f5dc;
+  color: #087844;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Selected icon */
+
+.safety-row.current .safety-walk {
+  background: #00a651;
+  color: #ffffff;
+}
+
+/* Instruction text */
+
+.safety-row > span:last-child {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Description */
+
+.safety-row small {
+  display: block;
+  font-size: 10px;
+  color: #5a6b61;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   9. ACCESSIBILITY TEXT SIZES
+========================================= */
+
+.guide-safety.text-large .safety-row {
+  font-size: 15px;
+}
+
+.guide-safety.text-large .safety-row small {
+  font-size: 12px;
+}
+
+.guide-safety.text-small .safety-row {
+  font-size: 11px;
+}
+
+.guide-safety.text-small .safety-row small {
+  font-size: 9px;
+}
+
+.guide-safety.text-large .safety-intro {
+  font-size: 17px;
+}
+
+.guide-safety.text-small .safety-intro {
+  font-size: 13px;
+}
+
+/* =========================================
+   10. HELP PAGE
+========================================= */
+
+.guide-help .help-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 27px 19px;
+}
+
+/* Emergency help */
+
+.help-emergency {
+  width: 100%;
+  height: 61px;
+  border: 0;
+  background: #e6faed;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  padding: 0 17px;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+
+.help-emergency > svg {
+  color: #ed3b48;
+}
+
+.help-emergency span,
+.help-item > span:nth-child(2) {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.help-list strong {
+  font-size: 13px;
+}
+
+.help-list small {
+  font-size: 10px;
+}
+
+/* Help item */
+
+.help-item {
+  width: 100%;
+  min-height: 76px;
+  border: 0;
+  border-bottom: 1px solid #ededed;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  padding: 0 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.help-item:hover {
+  background: #f8fcfa;
+}
+
+/* Help icon */
+
+.help-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #c8f4dc;
+  display: grid;
+  place-items: center;
+  color: #16874c;
+}
+
+.help-item > svg {
+  color: #808c85;
+}
+
+/* =========================================
+   11. HELP OVERLAY
+========================================= */
+
+.help-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #153f2b99;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+/* Dialog */
+
+.help-dialog {
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 30px 22px 22px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.help-dialog h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.help-dialog p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.help-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: transparent;
+  border: 0;
+  color: #666666;
+  cursor: pointer;
+}
+
+/* =========================================
+   12. RESPONSIVE IPHONE LAYOUT
+========================================= */
+
+@media (max-height: 760px) {
+  .guide-safety .safety-scroller {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .guide-safety .safety-illustration {
+    height: 145px;
+  }
+
+  .safety-intro {
+    margin: 5px 0 12px;
+  }
+
+  .safety-instructions {
+    gap: 4px;
+  }
+
+  .safety-row {
+    min-height: 51px;
+  }
+
+  .guide-footer {
+    padding-bottom: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .guide-safety .safety-scroller {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .guide-safety .safety-illustration {
+    width: 88%;
+  }
+
+  .safety-row {
+    gap: 10px;
+  }
+}
+
+/* =========================================
+   13. REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-safety .safety-slide-image {
+    animation: none;
+  }
+
+  .guide-page *,
+  .guide-page *::before,
+  .guide-page *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+
+
+
+
+
+
+/* =========================================
+   GRABAI.R SAFETY BACKGROUND
+========================================= */
+
+.guide-safety {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background-image: url("../assets/safety-background.png");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  overflow: hidden;
+}
+
+/* Keep header transparent */
+.guide-safety .guide-header {
+  background: transparent;
+  flex-shrink: 0;
+}
+
+/* Scrollable safety content */
+.guide-safety .safety-scroller {
+  position: relative;
+  z-index: 1;
+
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  background: transparent;
+}
+
+/* Keep the bottom background visible */
+.guide-safety .guide-footer {
+  position: relative;
+  z-index: 2;
+
+  flex-shrink: 0;
+  background: transparent;
+
+  padding: 16px 25px 28px;
+}
+
+/* Safety illustration */
+.guide-safety .safety-illustration {
+  border-radius: 21px;
+  overflow: hidden;
+  background: #e9f8f0;
+}
+
+/* Instruction rows */
+.guide-safety .safety-row {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(215, 235, 223, 0.8);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+}
+
+/* Selected instruction */
+.guide-safety .safety-row.current {
+  background: rgba(225, 250, 235, 0.95);
+  border-color: #8bd8ac;
+}
+
+/* Continue button */
+.guide-safety .guide-primary {
+  background: #00a651;
+  color: white;
+  border-radius: 26px;
+  min-height: 48px;
+}
