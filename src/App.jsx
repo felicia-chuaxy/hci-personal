@@ -13,6 +13,9 @@ import TripTracking from "./screens/TripTracking.jsx";
 import PickupNavigation from "./screens/PickupNavigation.jsx";
 import ScanCheckIn from "./screens/ScanCheckIn.jsx";
 import ManualCheckIn from "./screens/ManualCheckIn.jsx";
+import BeforeBoard from "./screens/BeforeBoard.jsx";
+import GuidanceSettings from "./screens/GuidanceSettings.jsx";
+import SafetyInstructions from "./screens/SafetyInstructions.jsx";
 
 // Import CSS
 import "./admin-layout.css";
@@ -109,8 +112,16 @@ export default function App() {
   };
 
 
-  // Passenger screens
+  // Setting
+  const [guidanceSettings, setGuidanceSettings] = useState({
+    textSize: "Medium",
+    readAloud: true,
+    language: "English",
+    dialect: "",
+  });
 
+
+  // Passenger screens
   const screens = {
     launch: <Launch onContinue={() => setPage("locationSelection")} />,
 
@@ -253,6 +264,33 @@ export default function App() {
       <ManualCheckIn
         onBack={() => setPage("scanCheckIn")}
         onCheckedIn={finishCheckIn}
+      />
+    ),
+    beforeBoard: (
+      <BeforeBoard
+        onBack={() => setPage("scanCheckIn")}
+        onContinue={() => setPage("boardingProgress")}
+        onGuide={() => setPage("safetyInstructions")}
+        onSettings={() => setPage("guidanceSettings")}
+        onHelp={() => showHelp("beforeBoard")}
+        settings={guidanceSettings}
+      />
+    ),
+    guidanceSettings: (
+      <GuidanceSettings
+        settings={guidanceSettings}
+        onSave={(value) => {
+          setGuidanceSettings(value);
+          setPage("beforeBoard");
+        }}
+        onBack={() => setPage("beforeBoard")}
+      />
+    ),
+    safetyInstructions: (
+      <SafetyInstructions
+        settings={guidanceSettings}
+        onBack={() => setPage("beforeBoard")}
+        // onContinue={() => setPage("boardingProgress")}
       />
     ),
   };
