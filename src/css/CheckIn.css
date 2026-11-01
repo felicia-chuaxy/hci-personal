@@ -1,0 +1,768 @@
+/* =========================================================
+   01. SHARED PAGE LAYOUT
+   ========================================================= */
+
+.checkin-page,
+.before-board {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  min-height: 0;
+
+  overflow: hidden;
+
+  background: #ffffff;
+  color: #171c19;
+}
+
+
+/* =========================================================
+   02. HEADER & NAVIGATION
+   ========================================================= */
+
+.checkin-header {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  height: 108px;
+  flex: none;
+
+  padding: 0 25px 18px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Header title */
+
+.checkin-header strong {
+  font-size: 15px;
+  font-weight: 750;
+}
+
+/* Back button */
+
+.checkin-header > button {
+  position: absolute;
+  left: 20px;
+  bottom: 11px;
+
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  background: transparent;
+  border: none;
+  color: #848b87;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   03. CHECK-IN CONTENT
+   ========================================================= */
+
+.checkin-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+
+  min-height: 0;
+
+  padding: 26px 27px 0;
+}
+
+/* Instruction text */
+
+.checkin-instruction {
+  align-self: stretch;
+
+  margin: 0 0 31px;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   04. QR SCANNER & CAMERA
+   ========================================================= */
+
+/* Scanner illustration container */
+
+.checkin-scan-illustration {
+  position: relative;
+
+  width: 84%;
+  height: 265px;
+  max-height: 43%;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  background: #e3f7ed;
+  border: none;
+  border-radius: 3px;
+}
+
+/* Camera or illustration image */
+
+.checkin-scan-illustration > img,
+.checkin-scan-illustration > video {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+/* QR code board */
+
+.checkin-qr-board {
+  position: absolute;
+  right: 8%;
+  bottom: 12%;
+
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+
+  width: 85px;
+  height: 115px;
+
+  background: #00784c;
+  border: 3px solid #ffffff;
+  border-radius: 6px;
+
+  color: #ffffff;
+
+  box-shadow: 0 4px 18px #0005;
+
+  transform: rotate(3deg);
+}
+
+/* QR board title */
+
+.checkin-qr-board span {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* QR code */
+
+.checkin-qr-board svg {
+  width: 61px;
+  height: 61px;
+
+  padding: 4px;
+
+  background: #ffffff;
+}
+
+/* QR board small text */
+
+.checkin-qr-board small {
+  font-size: 8px;
+}
+
+/* Camera labels */
+
+.checkin-camera-label,
+.checkin-camera-caption {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 6px 10px;
+
+  background: #fffef9e8;
+  border-radius: 12px;
+
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  transform: translateX(-50%);
+}
+
+/* Camera caption color */
+
+.checkin-camera-caption {
+  color: #096942;
+}
+
+/* Scanning frame */
+
+.checkin-scan-frame {
+  position: absolute;
+  inset: 19% 17%;
+
+  border: 3px solid #00c66b;
+  border-radius: 14px;
+
+  box-shadow: 0 0 0 100px #0002;
+
+  pointer-events: none;
+}
+
+/* Scanner error messages */
+
+.checkin-camera-error,
+.checkin-error {
+  color: #b3342b;
+
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+
+/* =========================================================
+   05. CHECK-IN BOTTOM ACTIONS
+   ========================================================= */
+
+.checkin-bottom {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  height: 185px;
+
+  padding: 0 27px 35px;
+
+  box-sizing: border-box;
+}
+
+/* Outline action button */
+
+.checkin-outline {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+
+  background: #ffffff;
+  border: 1px solid #c3c7c5;
+  border-radius: 28px;
+
+  color: #323b35;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* Help button variation */
+
+.checkin-outline.help {
+  color: #007b41;
+}
+
+/* Text link */
+
+.checkin-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  margin-top: 10px;
+
+  background: transparent;
+  border: none;
+
+  color: #075bb9;
+
+  font-size: 11px;
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   06. MANUAL CODE ENTRY
+   ========================================================= */
+
+/* Manual entry content */
+
+.checkin-content.manual {
+  align-items: stretch;
+}
+
+/* Code entry form */
+
+.checkin-code-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Code digit boxes container */
+
+.checkin-digits {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  width: 100%;
+
+  cursor: text;
+}
+
+/* Individual digit boxes */
+
+.checkin-digits span {
+  display: grid;
+  flex: 1;
+  place-items: center;
+
+  min-width: 0;
+  height: 53px;
+
+  background: #eeeeef;
+  border-radius: 12px;
+
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Filled digit */
+
+.checkin-digits span.filled {
+  background: #e5faec;
+  border: 1px solid #00a651;
+}
+
+/* Hidden keyboard input */
+
+.checkin-hidden-input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Manual code submit button */
+
+.checkin-code-submit {
+  margin-top: 20px;
+  padding: 12px 22px;
+
+  background: #00a651;
+  border: none;
+  border-radius: 22px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* Disabled submit button */
+
+.checkin-code-submit:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   07. POP-UP OVERLAY & DIALOG
+   ========================================================= */
+
+/* Dark overlay */
+
+.checkin-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+
+  display: grid;
+  place-items: center;
+
+  padding: 20px;
+
+  background: #082c1c88;
+}
+
+/* Dialog container */
+
+.checkin-dialog {
+  position: relative;
+
+  display: grid;
+  justify-items: center;
+  gap: 13px;
+
+  width: 100%;
+  max-width: 340px;
+
+  padding: 30px 22px 22px;
+
+  background: #ffffff;
+  border-radius: 19px;
+
+  text-align: center;
+
+  box-shadow: 0 18px 50px #0002;
+  box-sizing: border-box;
+}
+
+/* Dialog title */
+
+.checkin-dialog h2 {
+  margin: 0;
+
+  font-size: 19px;
+}
+
+/* Dialog description */
+
+.checkin-dialog p {
+  margin: 0;
+
+  color: #46534b;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* Close button */
+
+.checkin-close {
+  position: absolute;
+  top: 11px;
+  right: 10px;
+
+  background: transparent;
+  border: none;
+
+  color: #67706a;
+
+  cursor: pointer;
+}
+
+/* Primary confirmation button */
+
+.checkin-green {
+  width: 100%;
+
+  margin-top: 8px;
+  padding: 13px 20px;
+
+  background: #00a651;
+  border: none;
+  border-radius: 25px;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   08. BEFORE BOARDING — LAYOUT
+   ========================================================= */
+
+/* Before boarding page background */
+
+.before-board {
+  background: #f3fff9;
+}
+
+/* Before boarding header */
+
+.before-header {
+  height: 104px;
+
+  background: #e5fff1;
+  border: none;
+}
+
+/* Scrollable content */
+
+.before-scroll {
+  flex: 1;
+
+  min-height: 0;
+
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   09. BEFORE BOARDING — HERO IMAGE
+   ========================================================= */
+
+/* Hero image container */
+
+.before-hero {
+  position: relative;
+
+  height: 315px;
+
+  overflow: hidden;
+
+  background: #d1fcea;
+}
+
+/* Shuttle illustration */
+
+.before-hero img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center 55%;
+}
+
+/* Hero text container */
+
+.before-hero-text {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+
+  color: #006c43;
+
+  text-shadow: 0 1px 2px #ffffffcc;
+}
+
+/* Main hero heading */
+
+.before-hero-text h1 {
+  margin: 0 0 9px;
+
+  font-size: 32px;
+  font-weight: 850;
+  line-height: 1.04;
+  letter-spacing: -1.2px;
+}
+
+/* Hero description */
+
+.before-hero-text p {
+  margin: 0;
+
+  color: #192e24;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   10. BEFORE BOARDING — ACTION BUTTONS
+   ========================================================= */
+
+/* Actions container */
+
+.before-actions {
+  display: grid;
+  gap: 13px;
+
+  padding: 20px 24px 6px;
+  margin-top: 15px;
+}
+
+/* Default action button */
+
+.before-actions button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  height: 44px;
+
+  padding: 0 14px;
+
+  background: transparent;
+  border: 1px solid #afc5b8;
+  border-radius: 8px;
+
+  color: #006737;
+
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+/* Action button text */
+
+.before-actions button span {
+  flex: 1;
+
+  color: #273c2e;
+}
+
+/* Featured action button */
+
+.before-actions button.featured {
+  background: #00a651;
+  border-color: #00a651;
+
+  color: #ffffff;
+}
+
+/* Featured button text */
+
+.before-actions button.featured span {
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   11. BEFORE BOARDING — SAFETY INFORMATION
+   ========================================================= */
+
+/* Safety information container */
+.before-safety {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: 20px 25px 0;
+}
+
+/* Safety operator image container */
+.before-safety-image {
+  width: 65px;
+  height: 65px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #c5f6dc;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Safety operator image */
+.before-safety-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Safety information text */
+.before-safety-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.before-safety-content strong {
+  font-size: 12px;
+  font-weight: 750;
+  color: #153c29;
+}
+
+.before-safety-content p {
+  margin: 5px 0 0;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #53665b;
+}
+
+/* =========================================================
+   12. BEFORE BOARDING — FOOTER
+   ========================================================= */
+
+/* Fixed bottom footer */
+
+.before-footer {
+  flex: none;
+
+  padding: 10px 24px 25px;
+
+  background: #f3fff9;
+}
+
+/* Skip onboarding button */
+
+.before-footer button {
+  width: 100%;
+  height: 44px;
+
+  background: #ffffff;
+  border: 1px solid #c0cdc5;
+  border-radius: 28px;
+
+  color: #008149;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   13. BEFORE BOARDING — DIALOG & ACCESSIBILITY
+   ========================================================= */
+
+/* Step-by-step instruction list */
+
+.before-dialog ol {
+  padding-left: 23px;
+
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* Settings row */
+
+.before-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  width: 100%;
+
+  font-size: 13px;
+}
+
+/* Large text accessibility option */
+
+.before-board.large-text .before-actions button,
+.before-board.large-text .before-safety p {
+  font-size: 15px;
+}

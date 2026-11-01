@@ -11,6 +11,8 @@ import ConfirmRide from "./screens/ConfirmRide.jsx";
 import BookingConfirmed from "./screens/BookingConfirmed.jsx";
 import TripTracking from "./screens/TripTracking.jsx";
 import PickupNavigation from "./screens/PickupNavigation.jsx";
+import ScanCheckIn from "./screens/ScanCheckIn.jsx";
+import ManualCheckIn from "./screens/ManualCheckIn.jsx";
 
 // Import CSS
 import "./admin-layout.css";
@@ -99,10 +101,16 @@ export default function App() {
   }, [trackingStartedAt]);
 
 
-  // PickUp Navigation
+  // Check In
+  const [checkInValue, setCheckInValue] = useState("");
+  const finishCheckIn = (value) => {
+    setCheckInValue(value);
+    setPage("beforeBoard");
+  };
 
 
   // Passenger screens
+
   const screens = {
     launch: <Launch onContinue={() => setPage("locationSelection")} />,
 
@@ -232,6 +240,19 @@ export default function App() {
         pickup={pickup}
         pickupCoordinates={selectedPickup}
         onBack={() => setPage("tracking")}
+      />
+    ),
+     scanCheckIn: (
+      <ScanCheckIn
+        onBack={() => setPage("tracking")}
+        onManual={() => setPage("manualCheckIn")}
+        onCheckedIn={finishCheckIn}
+      />
+    ),
+    manualCheckIn: (
+      <ManualCheckIn
+        onBack={() => setPage("scanCheckIn")}
+        onCheckedIn={finishCheckIn}
       />
     ),
   };
