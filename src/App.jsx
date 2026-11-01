@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Import Screens
 import Launch from "./screens/Launch.jsx";
@@ -8,10 +8,18 @@ import SuitableVehicle from "./screens/SuitableVehicles.jsx";
 import VehicleDetails from "./screens/VehicleDetails.jsx";
 import BookSeat from "./screens/BookSeat.jsx";
 import ConfirmRide from "./screens/ConfirmRide.jsx";
-
+import BookingConfirmed from "./screens/BookingConfirmed.jsx";
+import TripTracking from "./screens/TripTracking.jsx";
+import PickupNavigation from "./screens/PickupNavigation.jsx";
 
 // Import CSS
 import "./admin-layout.css";
+
+// Timing Configuration (seconds)
+const CONFIRMED_SECONDS = 10;
+const SHUTTLE_TRAVEL_SECONDS = 20;
+const RIDE_SECONDS = 20;
+const TIMER_INTERVAL_MS = 250;
 
 export default function App() {
   // Passenger Controller
@@ -48,6 +56,50 @@ export default function App() {
 
   // Confirm Booking
   const [bookingRoute, setBookingRoute] = useState(null);
+
+  const startTracking = () => {
+    const timestamp = Date.now();
+    setTrackingStartedAt(timestamp);
+    setNow(timestamp);
+    setPage("tracking");
+  };
+
+  // Trip Tracking
+  const [trackingStartedAt, setTrackingStartedAt] = useState(null);
+  const [now, setNow] = useState(Date.now());
+
+  const elapsed =
+    trackingStartedAt === null
+      ? 0
+      : Math.max(0, (now - trackingStartedAt) / 1000);
+
+  const tripProgress = Math.max(
+    0,
+    Math.min(1, (elapsed - CONFIRMED_SECONDS) / SHUTTLE_TRAVEL_SECONDS),
+  );
+
+  const tripStage =
+    elapsed < CONFIRMED_SECONDS
+      ? "confirmed"
+      : tripProgress < 1
+        ? "onway"
+        : "arrived";
+
+
+  const etaSeconds = Math.max(
+    0,
+    Math.ceil((1 - tripProgress) * SHUTTLE_TRAVEL_SECONDS),
+  );
+
+  useEffect(() => {
+    if (trackingStartedAt === null) return;
+
+    const interval = setInterval(() => setNow(Date.now()), TIMER_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [trackingStartedAt]);
+
+
+  // PickUp Navigation
 
 
   // Passenger screens
@@ -143,6 +195,43 @@ export default function App() {
           )
         }
         onContinue={() => setPage("booked")}
+      />
+    ),
+    booked: (
+      <BookingConfirmed
+        pickup={pickup}
+        destination={destination}
+        seat={seat}
+        bookingRoute={bookingRoute}
+        onViewTrip={startTracking}
+        onCancel={editLocations}
+        selectedRide={vehicle}
+      />
+    ),
+
+    tracking: (
+      <TripTracking
+        stage={tripStage}
+        pickup={pickup}
+        destination={destination}
+        bookingRoute={bookingRoute}
+        selectedRide={vehicle}
+        seat={seat}
+        progress={tripProgress}
+        etaSeconds={etaSeconds}
+        elapsedSeconds={elapsed}
+        confirmedSeconds={CONFIRMED_SECONDS}
+        travelSeconds={SHUTTLE_TRAVEL_SECONDS}
+        onBack={() => setPage("booked")}
+        onDirections={() => setPage("navigation")}
+        onNext={() => setPage("scanCheckIn")}
+      />
+    ),
+    navigation: (
+      <PickupNavigation
+        pickup={pickup}
+        pickupCoordinates={selectedPickup}
+        onBack={() => setPage("tracking")}
       />
     ),
   };

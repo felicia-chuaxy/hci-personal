@@ -1,0 +1,643 @@
+/* ==============================================================
+   01. PAGE LAYOUT & SHARED STYLES
+   ============================================================== */
+
+.trip-track-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  overflow: hidden;
+
+  background: #ffffff;
+  color: #171b18;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.trip-track-page *,
+.navigation-page * {
+  box-sizing: border-box;
+}
+
+
+/* ==============================================================
+   02. PAGE HEADER
+   ============================================================== */
+
+.track-header {
+  position: relative;
+  z-index: 10;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  height: 101px;
+  flex-shrink: 0;
+
+  padding: 0 20px 15px;
+
+  background: #ffffff;
+}
+
+.track-header strong {
+  color: #171b18;
+  font-size: 15px;
+  font-weight: 750;
+  text-align: center;
+}
+
+/* Back Button */
+
+.track-header button {
+  position: absolute;
+  left: 14px;
+  bottom: 9px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 8px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #8b8d8e;
+
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.track-header button:hover {
+  background: #f0f5f2;
+}
+
+
+/* ==============================================================
+   03. TRIP TRACKING BOTTOM SHEET
+   ============================================================== */
+
+.track-bottom-sheet {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-height: 0;
+
+  padding: 20px;
+
+  border-radius: 25px 25px 0 0;
+
+  background: #ffffff;
+  box-shadow: 0 -4px 13px #00000008;
+}
+
+
+/* ==============================================================
+   04. SHUTTLE INFORMATION
+   ============================================================== */
+
+.track-shuttle-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Shuttle Image */
+
+.track-shuttle-line img {
+  width: 110px;
+  height: 66px;
+  flex-shrink: 0;
+
+  object-fit: contain;
+}
+
+/* Shuttle Details */
+
+.track-shuttle-line > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.track-shuttle-line h2 {
+  margin: 0 0 6px;
+
+  color: #171b18;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+/* Fare Badge */
+
+.track-price {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 5px;
+
+  background: #dcf9e7;
+  color: #087d43;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ==============================================================
+   05. TRIP PROGRESS INDICATOR
+   ============================================================== */
+
+/* Progress Container */
+
+.track-progress {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  width: 100%;
+  margin: 18px 0 10px;
+}
+
+/* Connecting Line */
+
+.track-progress-line {
+  position: absolute;
+  z-index: 0;
+
+  top: 10px;
+  left: 12.5%;
+
+  width: 75%;
+  height: 2px;
+
+  background: #d9e1dc;
+}
+
+/* Individual Progress Step */
+
+.track-progress-step {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+
+  min-width: 0;
+
+  text-align: center;
+}
+
+/* Progress Dot */
+
+.track-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 21px;
+  height: 21px;
+
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+
+  background: #e5e7eb;
+  color: #ffffff;
+}
+
+/* Completed Progress Dot */
+
+.track-dot.done {
+  border-color: #00a86b;
+
+  background: #00a86b;
+  color: #ffffff;
+}
+
+/* Progress Step Label */
+
+.track-progress-step small {
+  margin-top: 7px;
+
+  color: #323b34;
+
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+/* Progress Step Description */
+
+.track-progress-step b {
+  margin-top: 4px;
+
+  color: #4d5650;
+
+  font-size: 10px;
+  font-weight: 500;
+}
+
+
+/* ==============================================================
+   06. PICKUP NOTIFICATION
+   ============================================================== */
+
+/* Notice Container */
+
+.track-notice {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 11px 12px;
+
+  border-radius: 11px;
+
+  background: #e5f8ed;
+}
+
+/* Notice Icon */
+
+.track-notice-icon {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #b9f2d1;
+  color: #087f4c;
+}
+
+/* Notice Text Container */
+
+.track-notice > div {
+  display: grid;
+  gap: 3px;
+
+  min-width: 0;
+}
+
+/* Notice Title */
+
+.track-notice strong {
+  color: #078349;
+
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+/* Notice Description */
+
+.track-notice small {
+  color: #283e30;
+
+  font-size: 9px;
+  line-height: 1.45;
+
+  white-space: normal;
+}
+
+
+/* ==============================================================
+   07. TRACKING BUTTONS & ACTIONS
+   ============================================================== */
+
+.track-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Walking Directions Button */
+.track-directions-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  height: 43px;
+  min-height: 43px;
+  flex-shrink: 0;
+
+  border: 1px solid #b7bfba;
+  border-radius: 23px;
+
+  background: #ffffff;
+  color: #282c28;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.track-directions-button:hover {
+  border-color: #00a651;
+  background: #f5faf7;
+}
+
+.track-directions-button:active {
+  transform: scale(0.98);
+}
+
+
+.track-shuttle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  height: 43px;
+  min-height: 43px;
+  flex-shrink: 0;
+
+  border: 1px solid #b7bfba;
+  border-radius: 23px;
+
+  background: #00a651;
+  color: #282c28;
+
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+
+
+/* DISABLED - BEFORE SHUTTLE ARRIVES */
+.track-shuttle-button:disabled {
+  background: #f3f4f4;
+  border-color: #d9dedb;
+  color: #a3aaa6;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+
+
+/* Next Screen Link */
+.track-next-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  min-height: 21px;
+  margin-top: 5px;
+
+  border: 0;
+
+  background: transparent;
+  color: #078349;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* ==============================================================
+   08. LIVE SIMULATION INDICATOR
+   ============================================================== */
+
+/* Live Status Container */
+
+.track-live-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 21px;
+  margin-top: 5px;
+
+  color: #168c53;
+  font-size: 10px;
+}
+
+/* Animated Status Dot */
+
+.track-live-pulse {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #0aad55;
+  box-shadow: 0 0 0 3px #d8f4e3;
+
+  animation: shuttle-pulse 1.5s ease-in-out infinite;
+}
+
+/* Pulse Animation */
+
+@keyframes shuttle-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px #d8f4e3;
+  }
+
+  50% {
+    box-shadow: 0 0 0 7px #d8f4e355;
+  }
+}
+
+
+/* ==============================================================
+   09. WALKING NAVIGATION BOTTOM SHEET
+   ============================================================== */
+
+.nav-bottom-sheet {
+  position: relative;
+  z-index: 8;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-height: 0;
+
+  margin-top: -15px;
+  padding: 20px 21px 18px;
+
+  border-radius: 22px 22px 0 0;
+
+  background: #ffffff;
+}
+
+/* Navigation Heading */
+
+.nav-bottom-sheet h2 {
+  margin: 0 0 9px;
+
+  color: #171b18;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+/* Navigation Description */
+
+.nav-bottom-sheet > p {
+  margin: 0 0 12px;
+
+  color: #454d46;
+
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+/* ==============================================================
+   10. WALKING NAVIGATION STEPS
+   ============================================================== */
+
+/* Steps List */
+
+.nav-steps {
+  display: grid;
+  gap: 10px;
+
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+}
+
+/* Individual Step */
+
+.nav-step {
+  display: grid;
+  grid-template-columns: 21px 1fr 56px;
+  align-items: start;
+  gap: 9px;
+}
+
+/* Step Number Badge */
+
+.nav-step-badge {
+  display: grid;
+  place-items: center;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #00a651;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Step Text Container */
+
+.nav-step > div:nth-child(2) {
+  display: grid;
+  gap: 3px;
+}
+
+/* Step Title */
+
+.nav-step strong {
+  color: #222b25;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Step Description */
+
+.nav-step small {
+  color: #444444;
+
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+
+/* ==============================================================
+   11. WALKING NAVIGATION THUMBNAILS
+   ============================================================== */
+
+/* Default Thumbnail */
+
+.nav-step-thumb {
+  display: grid;
+  place-items: center;
+
+  height: 51px;
+
+  border-radius: 8px;
+
+  background: linear-gradient(145deg, #c5e9da, #75bf91);
+  color: #067843;
+}
+
+/* Thumbnail Variation 1 */
+
+.thumb-1 {
+  background: linear-gradient(145deg, #f4e5ca, #95c6c7);
+}
+
+/* Thumbnail Variation 2 */
+
+.thumb-2 {
+  background: linear-gradient(145deg, #b5ecdd, #048e53);
+  color: #ffffff;
+}
+
+
+/* ==============================================================
+   12. WALKING NAVIGATION ACTIONS
+   ============================================================== */
+
+.nav-bottom-sheet .track-directions-button {
+  margin-top: 11px;
+}
+
+
+
