@@ -1,0 +1,663 @@
+.boarding-screen {
+  --grab-green: #00a859;
+  --grab-dark-green: #007d46;
+  --grab-mint: #d4fae7;
+  --boarding-side-padding: 23px;
+
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  color: #151d19;
+
+  background: linear-gradient(
+    180deg,
+    #c4f5dc 0%,
+    #d5fae8 43%,
+    #ecfff5 75%,
+    #ffffff 100%
+  );
+
+  font-family: inherit;
+}
+
+/* =========================================
+   BACKGROUND SHUTTLE IMAGE
+   ========================================= */
+
+.boarding-vehicle-area {
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+
+  width: 118%;
+  height: 100%;
+
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.boarding-vehicle {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center center;
+
+  animation: boarding-image-enter 650ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.boarding-vehicle-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+  pointer-events: none;
+
+  background: linear-gradient(
+    180deg,
+    rgba(205, 249, 227, 0.16) 0%,
+    rgba(205, 249, 227, 0.06) 35%,
+    transparent 58%
+  );
+}
+
+.boarding-vehicle-area::after {
+  content: "";
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 130px;
+
+  z-index: 1;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.72)
+  );
+}
+
+/* =========================================
+   TOP NAVIGATION
+   ========================================= */
+
+.boarding-topbar {
+  position: relative;
+  z-index: 2;
+
+  height: 90px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  padding: 0 23px 15px;
+}
+
+.boarding-topbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-width: 32px;
+  min-height: 32px;
+
+  padding: 5px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #52665a;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease;
+}
+
+.boarding-topbar button:active {
+  transform: scale(0.92);
+  background: rgba(0, 128, 70, 0.08);
+}
+
+.boarding-topbar .boarding-help {
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 500;
+  color: #1b3025;
+}
+
+/* =========================================
+   HEADING
+   ========================================= */
+
+.boarding-heading {
+  position: relative;
+  z-index: 2;
+
+  flex-shrink: 0;
+
+  padding: 20px var(--boarding-side-padding) 11px;
+}
+
+.boarding-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.boarding-heading h1 {
+  margin: 0;
+
+  font-size: clamp(19px, 5.5vw, 23px);
+  font-weight: 750;
+
+  line-height: 1.25;
+  letter-spacing: -0.7px;
+
+  color: #17221b;
+}
+
+.boarding-ontime {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  background: rgba(231, 255, 239, 0.9);
+  color: #008749;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.boarding-heading p {
+  margin: 7px 0 0;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+
+  color: #314337;
+}
+
+/* =========================================
+   BOARDING TIMELINE
+   ========================================= */
+
+.boarding-timeline {
+  position: relative;
+  z-index: 2;
+
+  flex-shrink: 0;
+
+  padding: 13px 25px 0;
+}
+
+.boarding-step {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+  min-height: 38px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #1c2820;
+}
+
+/* Vertical connecting line */
+.boarding-step:not(:last-child)::before {
+  content: "";
+
+  position: absolute;
+
+  left: 10px;
+  top: 23px;
+  bottom: -14px;
+
+  width: 2px;
+
+  background: #b6d2c0;
+  border-radius: 2px;
+}
+
+.boarding-step.done:not(:last-child)::before {
+  background: #08bd38;
+}
+
+/* Status circle */
+.boarding-step-symbol {
+  position: relative;
+  z-index: 1;
+
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 1.5px solid #b0cbb9;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    transform 300ms ease;
+}
+
+/* Completed step */
+.boarding-step.done .boarding-step-symbol {
+  background: #08c62e;
+  border-color: #08c62e;
+
+  color: #ffffff;
+}
+
+/* Active step */
+.boarding-step.current .boarding-step-symbol {
+  border: 2px solid #008d4e;
+  background: #f5fff9;
+
+  box-shadow: 0 0 0 4px rgba(0, 171, 85, 0.09);
+
+  animation: boarding-status-pulse 2s ease-in-out infinite;
+}
+
+.boarding-step.current .boarding-step-symbol span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+  background: #008d4e;
+}
+
+.boarding-step.future .boarding-step-symbol {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.boarding-step-name {
+  flex: 1;
+}
+
+.boarding-step.current .boarding-step-name {
+  font-weight: 750;
+  color: #101c15;
+}
+
+.boarding-step.future .boarding-step-name {
+  color: #35443a;
+}
+
+.boarding-step time {
+  font-size: 10px;
+  font-weight: 400;
+  color: #435448;
+}
+
+/* =========================================
+   FLOATING BOARDING INSTRUCTION
+   ========================================= */
+
+.boarding-tip {
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  flex-shrink: 0;
+
+  margin: 11px 20px 0;
+  padding: 12px 13px;
+
+  min-height: 65px;
+
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  background: rgba(232, 250, 239, 0.95);
+
+  box-shadow:
+    0 8px 24px rgba(0, 91, 48, 0.07),
+    0 2px 5px rgba(0, 91, 48, 0.025);
+
+  animation: boarding-card-enter 450ms ease-out both;
+}
+
+.boarding-tip-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  color: #00864b;
+  background: #c9f0d9;
+}
+
+.boarding-tip > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.boarding-tip strong {
+  display: block;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  line-height: 1.35;
+  color: #007a45;
+}
+
+.boarding-tip p {
+  margin: 4px 0 0;
+
+  font-size: 10px;
+  line-height: 1.45;
+
+  color: #1d3024;
+}
+
+/* =========================================
+   DOOR MOTION OVERLAY
+   ========================================= */
+
+.boarding-motion {
+  position: absolute;
+
+  top: 50%;
+  left: 32%;
+  right: 33%;
+
+  z-index: 2;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 34px;
+  color: #fff;
+
+  text-shadow: 0 0 8px rgba(0, 157, 84, 0.7);
+
+  pointer-events: none;
+
+  animation: boarding-pulse 1.2s
+    ease-in-out infinite alternate;
+}
+
+/* =========================================
+   BOTTOM BUTTON
+   ========================================= */
+
+.boarding-bottom {
+  position: relative;
+  z-index: 4;
+
+  margin-top: auto;
+
+  width: 100%;
+  min-height: 86px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 25px
+    max(21px, env(safe-area-inset-bottom));
+
+  background: transparent;
+}
+
+.boarding-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 47px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #00a859;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 16px rgba(0, 145, 74, 0.16);
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.boarding-main:hover {
+  background: #009a51;
+  box-shadow: 0 7px 20px rgba(0, 145, 74, 0.22);
+}
+
+.boarding-main:active {
+  transform: scale(0.975);
+  background: #008b4a;
+}
+
+.boarding-main:focus-visible,
+.boarding-topbar button:focus-visible {
+  outline: 3px solid #086e43;
+  outline-offset: 3px;
+}
+
+.boarding-final {
+  margin: 0;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-align: center;
+
+  color: #007b45;
+
+  animation: boarding-text-pulse 1.7s
+    ease-in-out infinite;
+}
+
+/* =========================================
+   HELP MODAL
+   ========================================= */
+
+.boarding-overlay {
+  position: absolute;
+  inset: 0;
+
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(8, 26, 16, 0.48);
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  animation: boarding-overlay-in 220ms ease-out both;
+}
+
+.boarding-dialog {
+  width: 100%;
+  max-width: 320px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  padding: 25px 22px 22px;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.16);
+
+  animation: boarding-dialog-in 280ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.boarding-dialog h2 {
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 750;
+
+  color: #17261c;
+}
+
+.boarding-dialog p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #445348;
+}
+
+.boarding-dialog .boarding-main {
+  margin-top: 6px;
+}
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+
+@keyframes boarding-image-enter {
+  from {
+    opacity: 0;
+    transform: scale(1.025);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes boarding-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes boarding-status-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(0, 171, 85, 0.08);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 171, 85, 0.13);
+  }
+}
+
+@keyframes boarding-pulse {
+  from {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+
+@keyframes boarding-text-pulse {
+  0%, 100% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes boarding-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes boarding-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

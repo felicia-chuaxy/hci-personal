@@ -16,6 +16,8 @@ import ManualCheckIn from "./screens/ManualCheckIn.jsx";
 import BeforeBoard from "./screens/BeforeBoard.jsx";
 import GuidanceSettings from "./screens/GuidanceSettings.jsx";
 import SafetyInstructions from "./screens/SafetyInstructions.jsx";
+import BoardingProgress from "./screens/BoardingProgress.jsx";
+import TripEnRoute from "./screens/TripEnRoute.jsx";
 
 // Import CSS
 import "./admin-layout.css";
@@ -90,7 +92,6 @@ export default function App() {
         ? "onway"
         : "arrived";
 
-
   const etaSeconds = Math.max(
     0,
     Math.ceil((1 - tripProgress) * SHUTTLE_TRAVEL_SECONDS),
@@ -103,14 +104,12 @@ export default function App() {
     return () => clearInterval(interval);
   }, [trackingStartedAt]);
 
-
   // Check In
   const [checkInValue, setCheckInValue] = useState("");
   const finishCheckIn = (value) => {
     setCheckInValue(value);
     setPage("beforeBoard");
   };
-
 
   // Setting
   const [guidanceSettings, setGuidanceSettings] = useState({
@@ -120,6 +119,33 @@ export default function App() {
     dialect: "",
   });
 
+  // Trip En Route
+  const [rideStartedAt, setRideStartedAt] = useState(null);
+  const [rideTick, setRideTick] = useState(Date.now());
+
+  useEffect(() => {
+    if (rideStartedAt === null) return;
+
+    const interval = setInterval(
+      () => setRideTick(Date.now()),
+      TIMER_INTERVAL_MS,
+    );
+    return () => clearInterval(interval);
+  }, [rideStartedAt]);
+
+  const rideProgress =
+    rideStartedAt === null
+      ? 0
+      : Math.min(
+          1,
+          Math.max(0, (rideTick - rideStartedAt) / (RIDE_SECONDS * 1000)),
+        );
+  const beginRide = () => {
+    const timestamp = Date.now();
+    setRideStartedAt(timestamp);
+    setRideTick(timestamp);
+    setPage("tripEnRoute");
+  };
 
   // Passenger screens
   const screens = {
@@ -253,7 +279,7 @@ export default function App() {
         onBack={() => setPage("tracking")}
       />
     ),
-     scanCheckIn: (
+    scanCheckIn: (
       <ScanCheckIn
         onBack={() => setPage("tracking")}
         onManual={() => setPage("manualCheckIn")}
@@ -291,6 +317,29 @@ export default function App() {
         settings={guidanceSettings}
         onBack={() => setPage("beforeBoard")}
         // onContinue={() => setPage("boardingProgress")}
+      />
+    ),
+    boardingProgress: (
+      <BoardingProgress
+        onBack={() => setPage("beforeBoard")}
+        onHelp={() => showHelp("boardingProgress")}
+        onComplete={beginRide}
+      />
+    ),
+    tripEnRoute: (
+      <TripEnRoute
+        pickup={pickup}
+        destination={destination}
+        bookingRoute={bookingRoute}
+        progress={rideProgress}
+        durationSeconds={RIDE_SECONDS}
+        onBack={() => setPage("boardingProgress")}
+        onSafetyComplete={() => {
+          const timestamp = Date.now();
+          setRideStartedAt(timestamp);
+          setRideTick(timestamp);
+        }}
+        onDone={() => setPage("tripCompleted")}
       />
     ),
   };
