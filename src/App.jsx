@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // Import Screens
 import Launch from "./screens/Launch.jsx";
@@ -20,9 +20,11 @@ import BoardingProgress from "./screens/BoardingProgress.jsx";
 import TripEnRoute from "./screens/TripEnRoute.jsx";
 import TripCompleted from "./screens/TripCompleted.jsx";
 import RideHistory from "./screens/RideHistory.jsx";
+import HelpSupport from "./screens/HelpSupport.jsx";
 
-// Import CSS
-import "./admin-layout.css";
+import AdminController from "./components/AdminController.jsx";
+import ScenarioScreen from "./screens/ScenarioScreen.jsx";
+
 
 // Timing Configuration (seconds)
 const CONFIRMED_SECONDS = 10;
@@ -149,16 +151,27 @@ export default function App() {
     setPage("tripEnRoute");
   };
 
+  // Help Support
+  const [helpReturnPage, setHelpReturnPage] = useState("beforeBoard");
+
   // Scenario
   const [selectedScenario, setSelectedScenario] = useState(null);
   const [activeScenario, setActiveScenario] = useState(null);
 
   const [scenarioCompleted, setScenarioCompleted] = useState(false);
 
+  const chooseScenario = (id) => {
+    setSelectedScenario(id);
+    setScenarioCompleted(false);
+  };
 
-  // Trip Completed 
+  const resolveScenario = () => {
+    setActiveScenario(null);
+    setScenarioCompleted(true);
+  };
+
+  // Trip Completed
   const [rating, setRating] = useState(0);
-
 
   const bookAnotherRide = () => {
     // Reset previous booking
@@ -181,6 +194,30 @@ export default function App() {
     setScenarioCompleted(false);
     setPage("locationSelection");
   };
+
+  // Scenario
+  useEffect(() => {
+    if (!selectedScenario || activeScenario || scenarioCompleted) return;
+
+    const eligible = {
+      doorFailure: page === "boardingProgress",
+      emergency: page === "tripEnRoute",
+      breakdown: page === "tripEnRoute",
+      routeDelay: page === "tracking" && tripStage === "onway",
+    };
+    if (!eligible[selectedScenario]) return;
+
+    const delays = {
+      doorFailure: 8000,
+      emergency: 6000,
+      breakdown: 6000,
+      routeDelay: 3000,
+    };
+    const timer = window.setTimeout(() => {
+      setActiveScenario(selectedScenario);
+    }, delays[selectedScenario]);
+    return () => window.clearTimeout(timer);
+  }, [page, tripStage, selectedScenario, activeScenario, scenarioCompleted]);
 
   // Passenger screens
   const screens = {
@@ -377,7 +414,7 @@ export default function App() {
         onDone={() => setPage("tripCompleted")}
       />
     ),
-     tripCompleted: (
+    tripCompleted: (
       <TripCompleted
         onBack={() => setPage("tripEnRoute")}
         onRating={setRating}
@@ -394,33 +431,53 @@ export default function App() {
         onBookAgain={bookAnotherRide}
       />
     ),
-
-
-
+    helpSupport: <HelpSupport onBack={() => setPage(helpReturnPage)} />,
   };
 
   // Application layout
   return (
     <div className="dual-preview">
-      {/* Passenger Phone */}
       <section className="preview-column">
         <h2>Passenger App</h2>
 
         <div className="phone">
           <div className="island" />
-
           <div className="screen passenger-screen-root">
-            <div className="passenger-screen-content">{screens[page]}</div>
+            <div
+              className="passenger-screen-content"
+              aria-hidden={!!activeScenario}
+            >
+              {screens[page]}
+            </div>
+            {activeScenario && (
+              <div
+                className="passenger-scenario-overlay"
+                role="alertdialog"
+                aria-modal="true"
+              >
+                <ScenarioScreen
+                  scenario={activeScenario}
+                  onResolve={resolveScenario}
+                />
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Admin Controller Phone */}
       <section className="preview-column">
         <h2>Admin Controller</h2>
 
         <div className="phone admin-phone">
           <div className="island" />
+          <AdminController
+            currentPage={page}
+            activeScenario={activeScenario}
+            selectedScenario={selectedScenario}
+            onSelect={chooseScenario}
+            scenarioCompleted={scenarioCompleted}
+            onResolve={resolveScenario}
+          />
         </div>
       </section>
     </div>
