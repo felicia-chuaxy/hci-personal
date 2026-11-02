@@ -19,6 +19,7 @@ import SafetyInstructions from "./screens/SafetyInstructions.jsx";
 import BoardingProgress from "./screens/BoardingProgress.jsx";
 import TripEnRoute from "./screens/TripEnRoute.jsx";
 import TripCompleted from "./screens/TripCompleted.jsx";
+import RideHistory from "./screens/RideHistory.jsx";
 
 // Import CSS
 import "./admin-layout.css";
@@ -149,6 +150,23 @@ export default function App() {
     setRideStartedAt(timestamp);
     setRideTick(timestamp);
     setPage("tripEnRoute");
+  };
+
+  // Book another ride from Ride History
+  const bookAnotherRide = () => {
+    setPickup("");
+    setDestination("");
+    setSelectedPickup(null);
+    setSelectedDestination(null);
+    setNeeds([]);
+    setVehicle("shuttle");
+    setSeat(null);
+    setRating(0);
+    setRideStartedAt(null);
+    setTrackingStartedAt(null);
+    setCheckInValue("");
+    setEditingLocations(false);
+    setPage("locationSelection");
   };
 
   // Passenger screens
@@ -350,7 +368,17 @@ export default function App() {
       <TripCompleted
         onBack={() => setPage("tripEnRoute")}
         onRating={setRating}
-        onDone={() => setPage("locationSelection")}
+        onDone={() => setPage("rideHistory")}
+      />
+    ),
+    rideHistory: (
+      <RideHistory
+        pickup={pickup}
+        destination={destination}
+        seat={seat}
+        rating={rating}
+        onBack={() => setPage("tripCompleted")}
+        onBookAgain={bookAnotherRide}
       />
     ),
   };
