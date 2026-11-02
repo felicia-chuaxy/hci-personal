@@ -1,0 +1,196 @@
+/* 01. Screen container */
+.journey-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  color: #141414;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  animation: none !important;
+  transform: none;
+}
+
+.journey-complete {
+  background: #e5fff1;
+}
+
+/* 02. Header and back button */
+.journey-header {
+  height: 105px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 14px 16px;
+  position: relative;
+  z-index: 2;
+  background: #fff;
+}
+
+.journey-transparent {
+  background: transparent;
+}
+
+.journey-header strong {
+  font-size: 15px;
+}
+
+.journey-header button {
+  position: absolute;
+  bottom: 9px;
+  left: 13px;
+  background: transparent;
+  border: 0;
+  color: #888;
+  padding: 7px;
+}
+
+/* 03. Completion illustration and heading */
+.journey-celebrate {
+  height: 43%;
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.journey-celebrate img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: 50% 65%;
+}
+
+.journey-celebrate h1 {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  font-size: 29px;
+  line-height: 1.02;
+  color: #00763e;
+  margin: 0;
+  text-shadow: 0 1px 8px #effff1;
+}
+
+/* 04. Review bottom sheet */
+.journey-review {
+  flex: 1;
+  margin-top: -8px;
+  z-index: 2;
+  border-radius: 28px 28px 0 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 13px 24px 23px;
+  min-height: 0;
+}
+
+.journey-handle {
+  height: 3px;
+  width: 30px;
+  margin: 0 auto 13px;
+  background: #afc8b9;
+  border-radius: 5px;
+}
+
+.journey-review h2 {
+  font-size: 19px;
+  margin: 13px 0 9px;
+}
+
+.journey-review p {
+  font-size: 12px;
+  margin: 0;
+}
+
+/* 05. Rating question and stars */
+.journey-rating-question {
+  font-size: 12px;
+  margin: 28px 0 10px;
+}
+
+.journey-stars {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
+}
+
+.journey-stars button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* 06. Report-a-problem action */
+.journey-report {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #c5c5c5;
+  border-radius: 8px;
+  margin-top: 25px;
+  width: 100%;
+  padding: 0 13px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.journey-report svg:last-child {
+  margin-left: auto;
+}
+
+/* 07. Flexible spacer and Done button */
+.journey-fill {
+  flex: 1;
+  min-height: 5px;
+}
+
+.journey-button {
+  height: 44px;
+  border: 0;
+  background: #00a651;
+  color: white;
+  border-radius: 25px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* 08. Report-a-problem modal */
+.journey-modal {
+  position: absolute;
+  inset: 0;
+  background: #152c2288;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 25px;
+}
+
+.journey-modal > div {
+  max-width: 420px;
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  padding: 22px;
+  box-shadow: 0 12px 30px #0002;
+}
+
+.journey-modal h3 {
+  font-size: 18px;
+}
+
+.journey-modal p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.journey-modal button {
+  cursor: pointer;
+}

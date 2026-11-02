@@ -18,6 +18,7 @@ import GuidanceSettings from "./screens/GuidanceSettings.jsx";
 import SafetyInstructions from "./screens/SafetyInstructions.jsx";
 import BoardingProgress from "./screens/BoardingProgress.jsx";
 import TripEnRoute from "./screens/TripEnRoute.jsx";
+import TripCompleted from "./screens/TripCompleted.jsx";
 
 // Import CSS
 import "./admin-layout.css";
@@ -118,6 +119,9 @@ export default function App() {
     language: "English",
     dialect: "",
   });
+
+  // Trip Completed
+  const [rating, setRating] = useState(0);
 
   // Trip En Route
   const [rideStartedAt, setRideStartedAt] = useState(null);
@@ -340,6 +344,13 @@ export default function App() {
           setRideTick(timestamp);
         }}
         onDone={() => setPage("tripCompleted")}
+      />
+    ),
+    tripCompleted: (
+      <TripCompleted
+        onBack={() => setPage("tripEnRoute")}
+        onRating={setRating}
+        onDone={() => setPage("locationSelection")}
       />
     ),
   };
