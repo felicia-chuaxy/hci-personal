@@ -121,9 +121,6 @@ export default function App() {
     dialect: "",
   });
 
-  // Trip Completed
-  const [rating, setRating] = useState(0);
-
   // Trip En Route
   const [rideStartedAt, setRideStartedAt] = useState(null);
   const [rideTick, setRideTick] = useState(Date.now());
@@ -152,8 +149,19 @@ export default function App() {
     setPage("tripEnRoute");
   };
 
-  // Book another ride from Ride History
+  // Scenario
+  const [selectedScenario, setSelectedScenario] = useState(null);
+  const [activeScenario, setActiveScenario] = useState(null);
+
+  const [scenarioCompleted, setScenarioCompleted] = useState(false);
+
+
+  // Trip Completed 
+  const [rating, setRating] = useState(0);
+
+
   const bookAnotherRide = () => {
+    // Reset previous booking
     setPickup("");
     setDestination("");
     setSelectedPickup(null);
@@ -162,10 +170,15 @@ export default function App() {
     setVehicle("shuttle");
     setSeat(null);
     setRating(0);
+
+    // Reset both simulations and check-in
     setRideStartedAt(null);
     setTrackingStartedAt(null);
     setCheckInValue("");
     setEditingLocations(false);
+
+    setActiveScenario(null);
+    setScenarioCompleted(false);
     setPage("locationSelection");
   };
 
@@ -364,7 +377,7 @@ export default function App() {
         onDone={() => setPage("tripCompleted")}
       />
     ),
-    tripCompleted: (
+     tripCompleted: (
       <TripCompleted
         onBack={() => setPage("tripEnRoute")}
         onRating={setRating}
@@ -381,6 +394,9 @@ export default function App() {
         onBookAgain={bookAnotherRide}
       />
     ),
+
+
+
   };
 
   // Application layout
