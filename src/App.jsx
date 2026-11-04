@@ -31,6 +31,8 @@ const CONFIRMED_SECONDS = 10;
 const SHUTTLE_TRAVEL_SECONDS = 20;
 const RIDE_SECONDS = 20;
 const TIMER_INTERVAL_MS = 250;
+const DOOR_FAILURE_DELAY_MS = 2500;
+const SCENARIO_TRIGGER_DELAY_MS = 12000;
 
 export default function App() {
   // Passenger Controller
@@ -78,6 +80,9 @@ export default function App() {
   // Trip Tracking
   const [trackingStartedAt, setTrackingStartedAt] = useState(null);
   const [now, setNow] = useState(Date.now());
+  const scenarioPausedAt = useRef(null);
+  const pendingRideStart = useRef(false);
+  const doorFailureTimerRef = useRef(null);
 
   const elapsed =
     trackingStartedAt === null
@@ -101,13 +106,6 @@ export default function App() {
     Math.ceil((1 - tripProgress) * SHUTTLE_TRAVEL_SECONDS),
   );
 
-  useEffect(() => {
-    if (trackingStartedAt === null) return;
-
-    const interval = setInterval(() => setNow(Date.now()), TIMER_INTERVAL_MS);
-    return () => clearInterval(interval);
-  }, [trackingStartedAt]);
-
   // Check In
   const [checkInValue, setCheckInValue] = useState("");
   const finishCheckIn = (value) => {
@@ -127,15 +125,20 @@ export default function App() {
   const [rideStartedAt, setRideStartedAt] = useState(null);
   const [rideTick, setRideTick] = useState(Date.now());
 
+  // One clock loop updates both simulations, rather than creating two intervals.
+  // The scenario pause flag freezes both clock displays until resolution.
   useEffect(() => {
-    if (rideStartedAt === null) return;
+    if (trackingStartedAt === null && rideStartedAt === null) return;
 
-    const interval = setInterval(
-      () => setRideTick(Date.now()),
-      TIMER_INTERVAL_MS,
-    );
-    return () => clearInterval(interval);
-  }, [rideStartedAt]);
+    const interval = window.setInterval(() => {
+      if (scenarioPausedAt.current !== null) return;
+      const timestamp = Date.now();
+      if (trackingStartedAt !== null) setNow(timestamp);
+      if (rideStartedAt !== null) setRideTick(timestamp);
+    }, TIMER_INTERVAL_MS);
+
+    return () => window.clearInterval(interval);
+  }, [trackingStartedAt !== null, rideStartedAt !== null]);
 
   const rideProgress =
     rideStartedAt === null
@@ -144,7 +147,13 @@ export default function App() {
           1,
           Math.max(0, (rideTick - rideStartedAt) / (RIDE_SECONDS * 1000)),
         );
+
   const beginRide = () => {
+    if (activeScenario || (selectedScenario === "doorFailure" && !scenarioCompleted)) {
+      pendingRideStart.current = true;
+      return;
+    }
+    pendingRideStart.current = false;
     const timestamp = Date.now();
     setRideStartedAt(timestamp);
     setRideTick(timestamp);
@@ -154,27 +163,76 @@ export default function App() {
   // Help Support
   const [helpReturnPage, setHelpReturnPage] = useState("beforeBoard");
 
+  const showHelp = (returnPage) => {
+    setHelpReturnPage(returnPage);
+    setPage("helpSupport");
+  };
+
   // Scenario
   const [selectedScenario, setSelectedScenario] = useState(null);
   const [activeScenario, setActiveScenario] = useState(null);
 
   const [scenarioCompleted, setScenarioCompleted] = useState(false);
-
   const chooseScenario = (id) => {
+    window.clearTimeout(doorFailureTimerRef.current);
+    doorFailureTimerRef.current = null;
     setSelectedScenario(id);
     setScenarioCompleted(false);
   };
 
+
+  const handlePassengerReady = () => {
+    if (selectedScenario !== "doorFailure" || activeScenario || scenarioCompleted) return;
+
+    window.clearTimeout(doorFailureTimerRef.current);
+    doorFailureTimerRef.current = window.setTimeout(() => {
+      doorFailureTimerRef.current = null;
+      scenarioPausedAt.current = Date.now();
+      setActiveScenario("doorFailure");
+    }, DOOR_FAILURE_DELAY_MS);
+  };
+
   const resolveScenario = () => {
+    window.clearTimeout(doorFailureTimerRef.current);
+    doorFailureTimerRef.current = null;
+    const resolvedDoorFailure = activeScenario === "doorFailure";
+    const resumedAt = Date.now();
+    const pausedAt = scenarioPausedAt.current;
+
+    if (pausedAt !== null) {
+      const pauseDuration = resumedAt - pausedAt;
+      if (activeScenario === "routeDelay") {
+        setTrackingStartedAt((start) => start === null ? null : start + pauseDuration);
+        setNow(resumedAt);
+      }
+      if (activeScenario === "emergency" || activeScenario === "breakdown") {
+        setRideStartedAt((start) => start === null ? null : start + pauseDuration);
+        setRideTick(resumedAt);
+      }
+    }
+
+    scenarioPausedAt.current = null;
     setActiveScenario(null);
     setScenarioCompleted(true);
+
+    if (resolvedDoorFailure && pendingRideStart.current) {
+      pendingRideStart.current = false;
+      const timestamp = Date.now();
+      setRideStartedAt(timestamp);
+      setRideTick(timestamp);
+      setPage("tripEnRoute");
+    }
   };
 
   // Trip Completed
   const [rating, setRating] = useState(0);
 
-  const bookAnotherRide = () => {
-    // Reset previous booking
+  const resetTrip = () => {
+    window.clearTimeout(doorFailureTimerRef.current);
+    doorFailureTimerRef.current = null;
+    scenarioPausedAt.current = null;
+    pendingRideStart.current = false;
+
     setPickup("");
     setDestination("");
     setSelectedPickup(null);
@@ -182,74 +240,47 @@ export default function App() {
     setNeeds([]);
     setVehicle("shuttle");
     setSeat(null);
-    setRating(0);
-
-    // Reset both simulations and check-in
-    setRideStartedAt(null);
-    setTrackingStartedAt(null);
-    setCheckInValue("");
-    setEditingLocations(false);
-
-    setActiveScenario(null);
-    setScenarioCompleted(false);
-    setPage("locationSelection");
-  };
-
-  // Cancel active shuttle booking
-  const cancelTrip = () => {
-    // Stop tracking simulation
-    setTrackingStartedAt(null);
-    setNow(Date.now());
-
-    // Reset trip simulation
-    setRideStartedAt(null);
-    setRideTick(Date.now());
-
-    // Clear booking information
     setBookingRoute(null);
-    setPickup("");
-    setDestination("");
-    setSelectedPickup(null);
-    setSelectedDestination(null);
-
-    // Reset passenger selections
-    setNeeds([]);
-    setVehicle("shuttle");
-    setSeat(null);
     setCheckInValue("");
     setRating(0);
     setEditingLocations(false);
-
-    // Clear admin scenarios
+    setTrackingStartedAt(null);
+    setRideStartedAt(null);
+    setNow(Date.now());
+    setRideTick(Date.now());
     setSelectedScenario(null);
     setActiveScenario(null);
     setScenarioCompleted(false);
-
-    // Return to location selection screen
     setPage("locationSelection");
   };
+
+  const bookAnotherRide = resetTrip;
+  const cancelTrip = resetTrip;
+
+  // Clear pending door-failure callback on component unmount.
+  useEffect(() => () => window.clearTimeout(doorFailureTimerRef.current), []);
 
   // Scenario
   useEffect(() => {
     if (!selectedScenario || activeScenario || scenarioCompleted) return;
 
     const eligible = {
-      doorFailure: page === "boardingProgress",
       emergency: page === "tripEnRoute",
       breakdown: page === "tripEnRoute",
       routeDelay: page === "tracking" && tripStage === "onway",
     };
     if (!eligible[selectedScenario]) return;
 
-    const delays = {
-      doorFailure: 8000,
-      emergency: 12000,
-      breakdown: 12000,
-      routeDelay: 12000,
-    };
     const timer = window.setTimeout(() => {
+      // Stop the correct simulation clock at the moment the alert appears.
+      const pausedAt = Date.now();
+      scenarioPausedAt.current = pausedAt;
+      if (selectedScenario === "routeDelay") setNow(pausedAt);
+      if (selectedScenario === "emergency" || selectedScenario === "breakdown") {
+        setRideTick(pausedAt);
+      }
       setActiveScenario(selectedScenario);
-    }, delays[selectedScenario]);
+    }, SCENARIO_TRIGGER_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [page, tripStage, selectedScenario, activeScenario, scenarioCompleted]);
 
@@ -357,6 +388,7 @@ export default function App() {
         onViewTrip={startTracking}
         onCancel={editLocations}
         selectedRide={vehicle}
+        onBack={() => setPage("confirm")}
       />
     ),
 
@@ -423,13 +455,14 @@ export default function App() {
       <SafetyInstructions
         settings={guidanceSettings}
         onBack={() => setPage("beforeBoard")}
-        // onContinue={() => setPage("boardingProgress")}
+        onContinue={() => setPage("boardingProgress")}
       />
     ),
     boardingProgress: (
       <BoardingProgress
         onBack={() => setPage("beforeBoard")}
         onHelp={() => showHelp("boardingProgress")}
+        onReady={handlePassengerReady}
         onComplete={beginRide}
       />
     ),
@@ -446,7 +479,9 @@ export default function App() {
           setRideStartedAt(timestamp);
           setRideTick(timestamp);
         }}
-        onDone={() => setPage("tripCompleted")}
+        onDone={() => {
+          if (!activeScenario) setPage("tripCompleted");
+        }}
       />
     ),
     tripCompleted: (

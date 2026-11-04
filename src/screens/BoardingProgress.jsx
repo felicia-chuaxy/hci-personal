@@ -27,7 +27,8 @@ const STAGES = [
     title: "Boarding In Progress...",
     subtitle: "Please board carefully",
     notice: "You may now board",
-    detail: "Please proceed to your assigned seat and press I'm Ready when seated.",
+    detail:
+      "Please proceed to your assigned seat and press I'm Ready when seated.",
     image: doorOpening,
     duration: null,
   },
@@ -41,17 +42,13 @@ const STAGES = [
   },
 ];
 
-const STEPS = [
-  "Door unlocking",
-  "Boarding in progress",
-  "Door closing",
-];
+const STEPS = ["Door unlocking", "Boarding in progress", "Door closing"];
 
 export default function BoardingProgress({
   onBack = () => {},
   onHelp,
   onComplete = () => {},
-  
+  onReady,
 }) {
   const [stage, setStage] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
@@ -85,19 +82,17 @@ export default function BoardingProgress({
 
   // User confirms boarding
   const handleReady = () => {
-    if (stage === 1) {
-      setStage(2);
-    }
+    if (stage !== 1) return;
+    onReady?.();
+    setStage(2);
   };
 
   const currentStage = STAGES[stage];
 
   return (
     <section className="boarding-screen">
-          {/* HEADER */}
-      <header className="boarding-topbar">
-  
-      </header>
+      {/* HEADER */}
+      <header className="boarding-topbar"></header>
       {/* Stage heading */}
       <div className="boarding-heading">
         <div className="boarding-heading-row">
@@ -119,11 +114,7 @@ export default function BoardingProgress({
               key={index}
               className={
                 "boarding-step " +
-                (done
-                  ? "done"
-                  : active
-                  ? "current"
-                  : "future")
+                (done ? "done" : active ? "current" : "future")
               }
             >
               <div className="boarding-step-symbol">
@@ -134,9 +125,7 @@ export default function BoardingProgress({
                 ) : null}
               </div>
 
-              <span className="boarding-step-name">
-                {label}
-              </span>
+              <span className="boarding-step-name">{label}</span>
             </div>
           );
         })}
@@ -166,36 +155,24 @@ export default function BoardingProgress({
 
       {/* Bottom action */}
       <div className="boarding-bottom">
-
         {stage === 0 && (
-          <p className="boarding-final">
-            Unlocking shuttle door...
-          </p>
+          <p className="boarding-final">Unlocking shuttle door...</p>
         )}
 
         {stage === 1 && (
-          <button
-            className="boarding-main"
-            onClick={handleReady}
-          >
+          <button className="boarding-main" onClick={handleReady}>
             I'm Ready
           </button>
         )}
 
         {stage === 2 && (
-          <p className="boarding-final">
-            Preparing for departure...
-          </p>
+          <p className="boarding-final">Preparing for departure...</p>
         )}
-
       </div>
 
       {/* Help dialog */}
       {showHelp && (
-        <div
-          className="boarding-overlay"
-          onClick={() => setShowHelp(false)}
-        >
+        <div className="boarding-overlay" onClick={() => setShowHelp(false)}>
           <div
             className="boarding-dialog"
             role="dialog"
@@ -208,9 +185,8 @@ export default function BoardingProgress({
             <h2>Boarding help</h2>
 
             <p>
-              Stand clear while the shuttle door is moving.
-              Board only when the door is fully open.
-              Once seated, press I'm Ready to continue.
+              Stand clear while the shuttle door is moving. Board only when the
+              door is fully open. Once seated, press I'm Ready to continue.
             </p>
 
             <button

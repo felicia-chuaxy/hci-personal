@@ -5,6 +5,7 @@ import {
   Armchair,
   Clock3,
   Route,
+  ArrowLeft,
 } from "lucide-react";
 
 import { rides } from "../data/rideData";
@@ -24,11 +25,10 @@ export default function BookingConfirmed({
   bookingRoute,
   onViewTrip,
   onCancel,
+  onBack,
 }) {
   // Get the same selected vehicle as ConfirmRide
-  const ride = rides.find(
-    (vehicle) => vehicle.id === selectedRide
-  );
+  const ride = rides.find((vehicle) => vehicle.id === selectedRide);
 
   const vehicleName = ride?.name || "Ai.R Shuttle";
   const vehicleImage = ride?.image || shuttleImage;
@@ -41,16 +41,18 @@ export default function BookingConfirmed({
       : "—";
 
   const routeEstimate =
-    bookingRoute?.duration != null &&
-    !bookingRoute?.isApproximate
-      ? `${Math.max(
-          1,
-          Math.round(bookingRoute.duration / 60)
-        )} min`
+    bookingRoute?.duration != null && !bookingRoute?.isApproximate
+      ? `${Math.max(1, Math.round(bookingRoute.duration / 60))} min`
       : "—";
 
   return (
     <section className="booking-page booking-success">
+      {/* HEADER */}
+      <header className="booking-header success-header">
+        <button type="button" onClick={onBack} aria-label="Go back">
+          <ArrowLeft size={22} />
+        </button>
+      </header>
 
       {/* SUCCESS HEADER */}
       <div className="success-title">
@@ -69,13 +71,9 @@ export default function BookingConfirmed({
 
       {/* BOOKING DETAILS CARD */}
       <div className="success-card">
-
         {/* SELECTED SHUTTLE */}
         <div className="success-shuttle">
-          <img
-            src={vehicleImage}
-            alt={vehicleName}
-          />
+          <img src={vehicleImage} alt={vehicleName} />
 
           <div>
             <strong>{vehicleName}</strong>
@@ -89,9 +87,7 @@ export default function BookingConfirmed({
 
           <div>
             <small>Pick-up</small>
-            <strong>
-              {pickup || "Not selected"}
-            </strong>
+            <strong>{pickup || "Not selected"}</strong>
           </div>
         </div>
 
@@ -101,9 +97,7 @@ export default function BookingConfirmed({
 
           <div>
             <small>Drop-off</small>
-            <strong>
-              {destination || "Not selected"}
-            </strong>
+            <strong>{destination || "Not selected"}</strong>
           </div>
         </div>
 
@@ -121,7 +115,6 @@ export default function BookingConfirmed({
 
         {/* ROUTE DISTANCE AND ESTIMATE */}
         <div className="ride-metrics">
-
           {/* DISTANCE */}
           <div>
             <Route size={20} />
@@ -146,14 +139,12 @@ export default function BookingConfirmed({
               <strong>{routeEstimate}</strong>
             </span>
           </div>
-
         </div>
 
         {/* APPROXIMATE ROUTE MESSAGE */}
         {bookingRoute?.isApproximate && (
           <p className="route-note">
-            Road directions are unavailable;
-            the distance is a straight-line
+            Road directions are unavailable; the distance is a straight-line
             approximation.
           </p>
         )}
@@ -163,30 +154,18 @@ export default function BookingConfirmed({
           <small>Booking ref.</small>
           <strong>GRABAIR2345678</strong>
         </div>
-
       </div>
 
       {/* ACTION BUTTONS */}
       <div className="success-buttons">
-
-        <button
-          type="button"
-          className="booking-primary"
-          onClick={onViewTrip}
-        >
+        <button type="button" className="booking-primary" onClick={onViewTrip}>
           View Trip
         </button>
 
-        <button
-          type="button"
-          className="booking-outline"
-          onClick={onCancel}
-        >
+        <button type="button" className="booking-outline" onClick={onCancel}>
           Cancel Trip
         </button>
-
       </div>
-
     </section>
   );
 }

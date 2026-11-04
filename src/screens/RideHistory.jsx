@@ -110,8 +110,7 @@ export default function RideHistory({
               </p>
             ) : (
               <p>
-                This is a prototype. Contact the safety operator if you need
-                help.
+                Contact the safety operator if you need help.
               </p>
             )}
             <button className="journey-button" onClick={() => setDialog("")}>
