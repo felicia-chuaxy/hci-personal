@@ -195,6 +195,40 @@ export default function App() {
     setPage("locationSelection");
   };
 
+  // Cancel active shuttle booking
+  const cancelTrip = () => {
+    // Stop tracking simulation
+    setTrackingStartedAt(null);
+    setNow(Date.now());
+
+    // Reset trip simulation
+    setRideStartedAt(null);
+    setRideTick(Date.now());
+
+    // Clear booking information
+    setBookingRoute(null);
+    setPickup("");
+    setDestination("");
+    setSelectedPickup(null);
+    setSelectedDestination(null);
+
+    // Reset passenger selections
+    setNeeds([]);
+    setVehicle("shuttle");
+    setSeat(null);
+    setCheckInValue("");
+    setRating(0);
+    setEditingLocations(false);
+
+    // Clear admin scenarios
+    setSelectedScenario(null);
+    setActiveScenario(null);
+    setScenarioCompleted(false);
+
+    // Return to location selection screen
+    setPage("locationSelection");
+  };
+
   // Scenario
   useEffect(() => {
     if (!selectedScenario || activeScenario || scenarioCompleted) return;
@@ -209,9 +243,9 @@ export default function App() {
 
     const delays = {
       doorFailure: 8000,
-      emergency: 6000,
-      breakdown: 6000,
-      routeDelay: 3000,
+      emergency: 12000,
+      breakdown: 12000,
+      routeDelay: 12000,
     };
     const timer = window.setTimeout(() => {
       setActiveScenario(selectedScenario);
@@ -342,6 +376,7 @@ export default function App() {
         onBack={() => setPage("booked")}
         onDirections={() => setPage("navigation")}
         onNext={() => setPage("scanCheckIn")}
+        onCancel={cancelTrip}
       />
     ),
     navigation: (

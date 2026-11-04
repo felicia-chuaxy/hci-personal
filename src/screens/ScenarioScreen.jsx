@@ -89,36 +89,29 @@ function NextStep({
   );
 }
 
-function DoorFailureScreen({ onResolve }) {
+function useScenarioProgress(timings = [3000, 8000, 11000]) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     setProgress(0);
-
-    const timers = [
-      setTimeout(() => setProgress(1), 3000),
-      setTimeout(() => setProgress(2), 8000),
-      setTimeout(() => setProgress(3), 11000),
-    ];
-
-    return () => {
-      timers.forEach(clearTimeout);
-    };
+    const timers = timings.map((delay, index) =>
+      setTimeout(() => setProgress(index + 1), delay)
+    );
+    return () => timers.forEach(clearTimeout);
   }, []);
 
-  const isCompleted = progress === 3;
-
+  const isCompleted = progress >= timings.length;
   const getStatus = (index) => {
-    if (isCompleted || progress > index) {
-      return "completed";
-    }
-
-    if (progress === index) {
-      return "active";
-    }
-
+    if (progress > index) return "completed";
+    if (progress === index) return "active";
     return "pending";
   };
+
+  return { progress, isCompleted, getStatus };
+}
+
+function DoorFailureScreen({ onResolve }) {
+  const { isCompleted, getStatus } = useScenarioProgress();
 
   return (
     <div className="scenario-screen scenario-door">
@@ -219,6 +212,8 @@ function DoorFailureScreen({ onResolve }) {
 
 
 function EmergencyScreen({ onResolve }) {
+  const { isCompleted, getStatus } = useScenarioProgress();
+
   return (
     <div className="scenario-screen scenario-emergency">
       <ScenarioHeader type="emergency" />
@@ -260,12 +255,14 @@ function EmergencyScreen({ onResolve }) {
             icon={ShieldAlert}
             title="Remain calm"
             text="Stay in a safe position and avoid unnecessary movement."
+            status={getStatus(0)}
           />
 
           <NextStep
             icon={PhoneCall}
             title="Follow operator instructions"
             text="Listen for instructions from the safety operator."
+            status={getStatus(1)}
           />
 
           <NextStep
@@ -273,6 +270,7 @@ function EmergencyScreen({ onResolve }) {
             title="Wait for assistance"
             text="Help is being coordinated. Follow any emergency directions given."
             last
+            status={getStatus(2)}
           />
         </section>
       </div>
@@ -280,11 +278,12 @@ function EmergencyScreen({ onResolve }) {
       <div className="scenario-footer">
         <button
           type="button"
-          className="scenario-primary-button"
+          className={`scenario-primary-button ${!isCompleted ? "scenario-button-disabled" : ""}`}
           onClick={onResolve}
+          disabled={!isCompleted}
         >
-          <CheckCircle2 size={20} />
-          Acknowledge
+          {isCompleted ? <CheckCircle2 size={20} /> : <Hourglass size={20} />}
+          {isCompleted ? "Acknowledge Update" : "Coordinating assistance..."}
         </button>
       </div>
     </div>
@@ -292,6 +291,8 @@ function EmergencyScreen({ onResolve }) {
 }
 
 function BreakdownScreen({ onResolve }) {
+  const { isCompleted, getStatus } = useScenarioProgress();
+
   return (
     <div className="scenario-screen scenario-breakdown">
       <ScenarioHeader type="breakdown" />
@@ -337,19 +338,22 @@ function BreakdownScreen({ onResolve }) {
             icon={AlertTriangle}
             title="Issue reported"
             text="The vehicle has reported a technical problem."
+            status={getStatus(0)}
           />
 
           <NextStep
             icon={Wrench}
             title="Team assessment"
             text="The operations team will determine the next safe steps."
+            status={getStatus(1)}
           />
 
           <NextStep
             icon={Info}
             title="Further instructions"
-            text="Remain seated unless instructed otherwise by the safety operator."
+            text={isCompleted ? "The demonstration assessment has finished. Follow the operator’s instructions before moving." : "Remain seated unless instructed otherwise by the safety operator."}
             last
+            status={getStatus(2)}
           />
         </section>
       </div>
@@ -357,11 +361,12 @@ function BreakdownScreen({ onResolve }) {
       <div className="scenario-footer">
         <button
           type="button"
-          className="scenario-primary-button"
+          className={`scenario-primary-button ${!isCompleted ? "scenario-button-disabled" : ""}`}
           onClick={onResolve}
+          disabled={!isCompleted}
         >
-          <CheckCircle2 size={20} />
-          Acknowledge
+          {isCompleted ? <CheckCircle2 size={20} /> : <Hourglass size={20} />}
+          {isCompleted ? "Acknowledge Update" : "Assessing issue..."}
         </button>
       </div>
     </div>
@@ -369,6 +374,8 @@ function BreakdownScreen({ onResolve }) {
 }
 
 function RouteDelayScreen({ onResolve }) {
+  const { isCompleted, getStatus } = useScenarioProgress();
+
   return (
     <div className="scenario-screen scenario-delay">
       <ScenarioHeader type="delay" />
@@ -413,19 +420,22 @@ function RouteDelayScreen({ onResolve }) {
             icon={MapPin}
             title="Route being monitored"
             text="The operations team is monitoring the shuttle's progress."
+            status={getStatus(0)}
           />
 
           <NextStep
             icon={Clock3}
             title="Additional travel time"
             text="Arrival may take longer than the original estimate."
+            status={getStatus(1)}
           />
 
           <NextStep
             icon={CheckCircle2}
             title="Continue tracking"
-            text="Your journey information will be updated as the situation changes."
+            text={isCompleted ? "The route update has finished. You can return to tracking your journey." : "Your journey information will be updated as the situation changes."}
             last
+            status={getStatus(2)}
           />
         </section>
       </div>
@@ -433,11 +443,12 @@ function RouteDelayScreen({ onResolve }) {
       <div className="scenario-footer">
         <button
           type="button"
-          className="scenario-primary-button"
+          className={`scenario-primary-button ${!isCompleted ? "scenario-button-disabled" : ""}`}
           onClick={onResolve}
+          disabled={!isCompleted}
         >
-          <ArrowLeft size={20} />
-          Back to tracking
+          {isCompleted ? <ArrowLeft size={20} /> : <Hourglass size={20} />}
+          {isCompleted ? "Back to tracking" : "Updating route..."}
         </button>
       </div>
     </div>
