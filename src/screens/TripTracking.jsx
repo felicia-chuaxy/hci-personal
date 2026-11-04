@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Check, Footprints, BusFront } from "lucide-react";
+import { Check, Footprints, BusFront, XCircle } from "lucide-react";
 
 import TrackingMap from "../components/TrackingMap.jsx";
 import { PLACES, lookupPlace } from "../js/geo.js";
@@ -48,6 +48,7 @@ export default function TripTracking({
   selectedRide = "shuttle",
   onDirections,
   onNext,
+  onCancel,
   progress = 0,
   etaSeconds = 60,
   elapsedSeconds = 0,
@@ -57,6 +58,13 @@ export default function TripTracking({
   const [mapPickup, setMapPickup] = useState(PLACES.pickup);
   const [mapLoading, setMapLoading] = useState(true);
   const [mapError, setMapError] = useState("");
+
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  const handleConfirmCancel = () => {
+    setShowCancelModal(false);
+    onCancel?.();
+  };
 
   // Use App.jsx as the single source of shuttle progress
   const shuttleProgress = Math.max(0, Math.min(1, Number(progress) || 0));
@@ -160,13 +168,6 @@ export default function TripTracking({
     };
   }, [pickup]);
 
-
-
-
-
-
-
-
   const noticeDescription = isArrived
     ? `${pickupName} · Please locate your shuttle`
     : isArrivingSoon
@@ -181,6 +182,14 @@ export default function TripTracking({
     <section className="trip-track-page">
       <header className="track-header">
         <strong>{c.header}</strong>
+
+        <button
+          type="button"
+          className="track-header-cancel"
+          onClick={() => setShowCancelModal(true)}
+        >
+          Cancel
+        </button>
       </header>
 
       {/* LIVE SHUTTLE MAP */}
@@ -207,14 +216,16 @@ export default function TripTracking({
       {/* BOTTOM SHEET */}
       <article className="track-bottom-sheet">
         {/* SHUTTLE DETAILS */}
-
         <div className="track-shuttle-line">
           <img src={selectedVehicle.image} alt={selectedVehicle.name} />
 
-          <div>
+          <div className="track-shuttle-details">
             <h2>{selectedVehicle.name}</h2>
-            <span className="track-price">{selectedVehicle.fare}</span>
+
+            <span className="vehicle-plate">UOG1234G</span>
           </div>
+
+          <span className="track-price">{selectedVehicle.fare}</span>
         </div>
 
         {/* PROGRESS TIMELINE */}
@@ -283,6 +294,48 @@ export default function TripTracking({
           </div>
         )}
       </article>
+
+      {/* CANCEL CONFIRMATION MODAL */}
+      {showCancelModal && (
+        <div className="track-modal-overlay">
+          <div
+            className="track-modal"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="cancel-trip-title"
+            aria-describedby="cancel-trip-description"
+          >
+            <div className="track-modal-icon">
+              <XCircle size={32} />
+            </div>
+
+            <h2 id="cancel-trip-title">Cancel Trip?</h2>
+
+            <p id="cancel-trip-description">
+              Are you sure you want to cancel your trip? Your shuttle booking
+              will be cancelled.
+            </p>
+
+            <div className="track-modal-actions">
+              <button
+                type="button"
+                className="track-keep-button"
+                onClick={() => setShowCancelModal(false)}
+              >
+                Keep Trip
+              </button>
+
+              <button
+                type="button"
+                className="track-confirm-cancel-button"
+                onClick={handleConfirmCancel}
+              >
+                Yes, Cancel Trip
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -360,28 +360,12 @@ export default function PickupNavigation({
                   <strong>{title}</strong>
                   <small>{detail}</small>
                 </div>
-
-                <span className="air-step-end">
-                  <Icon size={20} />
-                </span>
               </div>
             )
           )}
         </div>
 
-        {/* FOOTER */}
-        <div className="air-nav-footer">
-          <button
-            type="button"
-            onClick={openGoogleMaps}
-          >
-            <Navigation size={19} />
-
-            Open in Maps
-
-            <ChevronRight size={20} />
-          </button>
-        </div>
+   
 
       </article>
     </section>
