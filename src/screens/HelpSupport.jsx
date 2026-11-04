@@ -13,7 +13,7 @@ import "../css/GuidanceExtras.css";
 const panels = {
   support: {
     title: "Call Support",
-    body: "For assistance with your booking or boarding, contact the GrabAi.R support team. This prototype does not place calls.",
+    body: "For assistance with your booking or boarding, contact the GrabAi.R support team.",
   },
   faq: {
     title: "Frequently Asked Questions",

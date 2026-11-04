@@ -22,9 +22,9 @@ export default function Launch({ onContinue }) {
         <button className="primary" onClick={onContinue}>
           Log In
         </button>
-        <button className="secondary" onClick={onContinue}>
+        {/* <button className="secondary" onClick={onContinue}>
           New to GrabAI.R? Sign up!
-        </button>
+        </button> */}
       </div>
     </section>
   );

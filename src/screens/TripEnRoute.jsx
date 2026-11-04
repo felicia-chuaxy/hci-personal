@@ -9,12 +9,13 @@ import {
   Route,
   BusFront,
   Check,
+  CircleHelp
 } from "lucide-react";
 
 import NavigationMap from "../components/NavigationMap.jsx";
 import { lookupPlace } from "../js/geo.js";
 import shuttle from "../assets/grabair-shuttle.png";
-
+import HelpSupport from "./HelpSupport.jsx";
 
 import "leaflet/dist/leaflet.css";
 import "../css/Journey.css";
@@ -51,6 +52,8 @@ export default function TripEnRoute({
 
   const [mapLoading, setMapLoading] = useState(true);
   const [mapError, setMapError] = useState("");
+
+  const [showHelp, setShowHelp] = useState(false);
 
   // KEEP CALLBACK REFERENCES UPDATED
   useEffect(() => {
@@ -92,7 +95,6 @@ export default function TripEnRoute({
   const allReady = checks.boarding && checks.doors && checks.safety;
 
   const safetyProgress = Math.min(100, (safetyElapsed / SAFETY_DURATION) * 100);
-
 
   useEffect(() => {
     let active = true;
@@ -208,8 +210,23 @@ export default function TripEnRoute({
       "All checks are complete. Your journey will begin shortly.";
   }
 
+  if (showHelp) {
+    return <HelpSupport onBack={() => setShowHelp(false)} />;
+  }
+
   return (
     <main className="journey-screen">
+      {/* HEADER */}
+      {/* <header className="journey-header">
+        <strong>
+          {isArrived
+            ? "Trip arrived"
+            : safetyComplete
+              ? "Trip in progress"
+              : "Preparing for departure"}
+        </strong>
+      </header> */}
+
       {/* HEADER */}
       <header className="journey-header">
         <strong>
@@ -219,6 +236,15 @@ export default function TripEnRoute({
               ? "Trip in progress"
               : "Preparing for departure"}
         </strong>
+
+        <button
+          type="button"
+          className="journey-help-button"
+          onClick={() => setShowHelp(true)}
+          aria-label="Help and Support"
+        >
+          <CircleHelp size={23} strokeWidth={2} />
+        </button>
       </header>
 
       {/* NAVIGATION MAP */}
