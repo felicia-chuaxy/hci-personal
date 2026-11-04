@@ -120,10 +120,7 @@ export default function SafetyInstructions({ onBack, onContinue, settings }) {
                 </span>
 
                 <span>
-                  <b>
-                          {tip.title}
-
-                  </b>
+                  <b>{tip.title}</b>
             
 
                   {index === step && <small>{tip.description}</small>}

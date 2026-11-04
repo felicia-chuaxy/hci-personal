@@ -1,8 +1,8 @@
+
 /* =========================================================
    1. GLOBAL BOOKING PAGE STYLES
    ========================================================= */
 
-/* Main booking page container */
 .booking-page {
   height: 100%;
   display: flex;
@@ -13,7 +13,6 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Apply consistent font to buttons */
 .booking-page button {
   font-family: inherit;
 }
@@ -22,7 +21,6 @@
    2. BOOKING HEADER
    ========================================================= */
 
-/* Header layout */
 .booking-header {
   height: 101px;
   flex-shrink: 0;
@@ -33,14 +31,12 @@
   position: relative;
 }
 
-/* Header title */
 .booking-header h1 {
   font-size: 16px;
   margin: 0;
   font-weight: 750;
 }
 
-/* Back navigation button */
 .booking-header > button {
   position: absolute;
   left: 18px;
@@ -57,19 +53,17 @@
    3. REUSABLE BOOKING BUTTONS
    ========================================================= */
 
-/* Primary green button */
 .booking-primary {
   height: 46px;
   width: 100%;
   border: 0;
   border-radius: 24px;
   background: #00a651;
-  color: white;
+  color: #fff;
   font-size: 14px;
   font-weight: 750;
 }
 
-/* Secondary outline button */
 .booking-outline {
   height: 45px;
   width: 100%;
@@ -85,7 +79,6 @@
    4. BOOKING FOOTER
    ========================================================= */
 
-/* Footer container */
 .booking-footer {
   margin-top: auto;
   padding: 12px 24px 32px;
@@ -93,7 +86,6 @@
   flex-shrink: 0;
 }
 
-/* Compact footer variation */
 .booking-footer.compact {
   padding-top: 8px;
 }
@@ -102,7 +94,6 @@
    5. VEHICLE DETAILS PAGE
    ========================================================= */
 
-/* Vehicle image container */
 .vehicle-photo {
   height: 42%;
   position: relative;
@@ -111,14 +102,12 @@
   flex-shrink: 0;
 }
 
-/* Vehicle image */
 .vehicle-photo > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Back button displayed over vehicle image */
 .photo-back {
   position: absolute;
   top: 65px;
@@ -133,7 +122,6 @@
   color: #333;
 }
 
-/* Vehicle information card */
 .vehicle-info {
   background: #fff;
   border-radius: 24px 24px 0 0;
@@ -143,13 +131,11 @@
   flex: 1;
 }
 
-/* Vehicle name */
 .vehicle-info h1 {
   font-size: 19px;
   margin: 0 0 6px;
 }
 
-/* Vehicle description */
 .vehicle-info p {
   font-size: 12px;
   line-height: 1.55;
@@ -161,21 +147,18 @@
    6. VEHICLE FEATURES
    ========================================================= */
 
-/* Features grid layout */
 .vehicle-features {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 22px 10px;
 }
 
-/* Individual feature */
 .vehicle-feature {
   display: flex;
   align-items: center;
   gap: 9px;
 }
 
-/* Feature icon circle */
 .vehicle-feature > span {
   width: 50px;
   height: 50px;
@@ -186,7 +169,6 @@
   color: #14864c;
 }
 
-/* Feature description */
 .vehicle-feature small {
   font-size: 10px;
   color: #444;
@@ -196,7 +178,6 @@
    7. FARE SUMMARY
    ========================================================= */
 
-/* Fare information container */
 .fare-summary {
   display: flex;
   flex-direction: column;
@@ -205,18 +186,15 @@
   position: relative;
 }
 
-/* Fare amount */
 .fare-summary strong {
   font-size: 14px;
 }
 
-/* Fare description */
 .fare-summary span {
   font-size: 10px;
   color: #666;
 }
 
-/* Fare dropdown indicator */
 .fare-summary .fare-chevron {
   position: absolute;
   right: 8px;
@@ -225,19 +203,9 @@
 }
 
 /* =========================================================
-   8. SEAT SELECTION PAGE - HEADER
+   8. SEAT SELECTION - VEHICLE INFORMATION
    ========================================================= */
 
-/* Seat selection header height */
-.seat-page .booking-header {
-  height: 101px;
-}
-
-/* =========================================================
-   9. SEAT SELECTION - VEHICLE INFORMATION
-   ========================================================= */
-
-/* Selected vehicle summary */
 .seat-top {
   display: flex;
   align-items: center;
@@ -246,14 +214,12 @@
   flex-shrink: 0;
 }
 
-/* Vehicle thumbnail */
 .seat-top img {
   width: 80px;
   height: 51px;
   object-fit: contain;
 }
 
-/* Vehicle text information */
 .seat-top > div {
   display: flex;
   flex-direction: column;
@@ -261,12 +227,10 @@
   min-width: 0;
 }
 
-/* Vehicle name */
 .seat-top strong {
   font-size: 14px;
 }
 
-/* Route and fare information */
 .seat-top small {
   font-size: 12px;
   white-space: nowrap;
@@ -275,10 +239,9 @@
 }
 
 /* =========================================================
-   10. SEAT SELECTION - SEATING MAP
+   9. SEAT SELECTION - SEATING MAP
    ========================================================= */
 
-/* Scrollable seating map container */
 .seat-scroll {
   flex: 1;
   min-height: 0;
@@ -289,14 +252,12 @@
   margin-top: 30px;
 }
 
-/* Seating plan wrapper */
 .seat-map {
   width: min(100%, 290px);
   position: relative;
   flex-shrink: 0;
 }
 
-/* Seating plan image */
 .seat-map > img {
   display: block;
   width: 100%;
@@ -304,10 +265,9 @@
 }
 
 /* =========================================================
-   11. SEAT SELECTION - INTERACTIVE SEATS
+   10. SEAT SELECTION - INTERACTIVE SEATS
    ========================================================= */
 
-/* Clickable seat positions */
 .seat-hotspot {
   position: absolute;
   transform: translate(-62%, -26%);
@@ -321,42 +281,33 @@
   color: #fff;
 }
 
-/* Unavailable seats */
 .seat-hotspot:disabled {
   cursor: not-allowed;
 }
 
-/* Currently selected seat */
 .seat-hotspot.is-selected {
   border-color: #00a651;
   background: #00a65155;
 }
 
-/* Selected seat inner indicator */
 .seat-hotspot span {
   display: grid;
   place-items: center;
   background: #00a651;
-  color: white;
+  color: #fff;
   border-radius: 50%;
 }
 
 /* =========================================================
-   12. SEAT SELECTION - BOTTOM SECTION
+   11. SEAT SELECTION - BOTTOM SECTION
    ========================================================= */
 
-/* Bottom panel containing legend and confirmation */
 .seat-bottom {
   padding: 10px 22px 20px;
   background: #fff;
   flex-shrink: 0;
 }
 
-/* =========================================================
-   13. SEAT SELECTION - SEAT LEGEND
-   ========================================================= */
-
-/* Legend container */
 .seat-legend {
   display: flex;
   justify-content: space-between;
@@ -365,40 +316,34 @@
   margin-bottom: 8px;
 }
 
-/* Individual legend label */
 .seat-legend span {
   display: flex;
   align-items: center;
   gap: 3px;
 }
 
-/* Legend indicator boxes */
 .seat-legend i {
   height: 16px;
   width: 16px;
   border-radius: 2px;
 }
 
-/* Available seat indicator */
 .legend-free {
   background: #bdf8d3;
 }
 
-/* Selected seat indicator */
 .legend-picked {
   background: #00a651;
 }
 
-/* Unavailable seat indicator */
 .legend-blocked {
   background: #d5d6d8;
 }
 
 /* =========================================================
-   14. SEAT SELECTION - SELECTED SEAT DETAILS
+   12. SEAT SELECTION - SELECTED SEAT DETAILS
    ========================================================= */
 
-/* Selected seat information container */
 .seat-picked {
   display: flex;
   gap: 9px;
@@ -407,24 +352,20 @@
   margin-bottom: 16px;
 }
 
-/* Selected seat text layout */
 .seat-picked strong,
 .seat-picked small {
   display: block;
 }
 
-/* Selected seat number */
 .seat-picked strong {
   font-size: 12px;
 }
 
-/* Selected seat description */
 .seat-picked small {
   font-size: 10px;
   margin-top: 3px;
 }
 
-/* Bus icon circle */
 .bus-circle {
   width: 34px;
   height: 34px;
@@ -435,7 +376,6 @@
   place-items: center;
 }
 
-/* Seat selection validation error */
 .seat-error {
   font-size: 10px;
   color: #c33;
@@ -444,30 +384,56 @@
 }
 
 /* =========================================================
-   23. BOOKING SUCCESS PAGE - MAIN LAYOUT
+   13. BOOKING SUCCESS PAGE
    ========================================================= */
 
-/* Success page background */
 .booking-success {
   background: #e9fff0;
   padding: 0 17px 27px;
 }
 
-/* =========================================================
-   24. BOOKING SUCCESS PAGE - SUCCESS MESSAGE
-   ========================================================= */
+/* Success header */
 
-/* Success title container */
-.success-title {
+.booking-success .success-header {
+  position: relative;
+  width: 100%;
+  height: 101px;
+  min-height: 101px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 0 0 15px;
+  box-sizing: border-box;
+}
+
+.booking-success .success-header > button {
+  position: absolute;
+  left: 0;
+  bottom: 15px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Success message */
+
+.booking-success .success-title {
   text-align: center;
-  padding: 119px 0 22px;
+  padding: 15px 0 22px;
   flex-shrink: 0;
 }
 
-/* Green success checkmark circle */
 .success-icon {
-  width: 29px;
-  height: 29px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -476,13 +442,11 @@
   margin: 0 auto 8px;
 }
 
-/* Success heading */
 .success-title h1 {
-  font-size: 18px;
+  font-size: 20px;
   margin: 0 0 7px;
 }
 
-/* Success description */
 .success-title p {
   margin: 0;
   font-size: 11px;
@@ -490,10 +454,9 @@
 }
 
 /* =========================================================
-   25. BOOKING SUCCESS PAGE - CONFIRMATION CARD
+   14. BOOKING SUCCESS - CONFIRMATION CARD
    ========================================================= */
 
-/* Booking confirmation details card */
 .success-card {
   background: #fff;
   border-radius: 12px;
@@ -503,49 +466,42 @@
   min-height: 0;
 }
 
-/* Confirmation information rows */
 .success-card .review-line {
   padding: 9px 2px;
 }
 
-/* Confirmed shuttle image */
 .success-card .success-shuttle img {
   width: 84px;
   height: 54px;
 }
 
-/* Confirmed shuttle text */
 .success-card .success-shuttle b {
   font-size: 12px;
 }
 
 /* =========================================================
-   26. BOOKING SUCCESS PAGE - BOOKING REFERENCE
+   15. BOOKING SUCCESS - BOOKING REFERENCE
    ========================================================= */
 
-/* Booking reference container */
 .booking-number {
   display: grid;
   gap: 4px;
   padding-top: 9px;
 }
 
-/* Booking reference label */
 .booking-number small {
   font-size: 9px;
   color: #777;
 }
 
-/* Booking reference number */
 .booking-number strong {
   font-size: 11px;
 }
 
 /* =========================================================
-   27. BOOKING SUCCESS PAGE - ACTION BUTTONS
+   16. BOOKING SUCCESS - ACTION BUTTONS
    ========================================================= */
 
-/* Success page button group */
 .success-buttons {
   display: grid;
   gap: 9px;
@@ -554,49 +510,16 @@
 }
 
 /* =========================================================
-   28. RESPONSIVE DESIGN - SMALL SCREENS
+   17. RESPONSIVE DESIGN
    ========================================================= */
 
-@media (max-width: 450px) {
-  /* Vehicle image height for narrow screens */
-  .vehicle-photo {
-    height: 42%;
-  }
+/* Narrow screens */
 
-  /* Reduce success page top spacing */
+@media (max-width: 450px) {
   .success-title {
     padding-top: 100px;
   }
 }
 
-/* =========================================================
-   29. RESPONSIVE DESIGN - SHORT SCREENS
-   ========================================================= */
 
-@media (max-height: 720px) {
-  /* Reduce header height */
-  .booking-header,
-  .seat-page .booking-header {
-    height: 75px;
-  }
 
-  /* Reduce success message top spacing */
-  .success-title {
-    padding-top: 80px;
-  }
-
-  /* Reduce vehicle image height */
-  .vehicle-photo {
-    height: 36%;
-  }
-
-  /* Reduce seating map width */
-  .seat-map {
-    width: min(100%, 230px);
-  }
-
-  /* Reduce bottom panel spacing */
-  .seat-bottom {
-    padding-bottom: 12px;
-  }
-}
