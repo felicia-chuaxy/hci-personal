@@ -4,9 +4,12 @@ import {
   Check,
   ChevronRight,
   Star,
+  Users,
+  UserRound,
+  X,
 } from "lucide-react";
 
-import { rides } from "../data/rideData";
+import { rides, getRideFare, formatFare } from "../data/rideData";
 import "../css/SuitableVehicles.css";
 
 export default function SuitableRides({
@@ -14,32 +17,28 @@ export default function SuitableRides({
   destination,
   needs = [],
   selectedRide,
+  sharingPreference = null,
   onBack,
   onDone,
   onEdit,
 }) {
   const hasTravelNeeds = needs.length > 0;
+
   const [selected, setSelected] = useState(
-    selectedRide || (hasTravelNeeds ? "shuttle" : null)
+    selectedRide || (hasTravelNeeds ? "shuttle" : null),
   );
-  const [tab, setTab] = useState(
-    selectedRide &&
-      selectedRide !== "shuttle" &&
-      hasTravelNeeds
-      ? "other"
-      : "recommended"
-  );
+
+  const [tab, setTab] = useState("recommended");
+
+  // Sharing popup visibility
+  const [showSharingPopup, setShowSharingPopup] = useState(false);
 
   useEffect(() => {
     if (selectedRide) {
       setSelected(selectedRide);
 
       if (hasTravelNeeds) {
-        setTab(
-          selectedRide === "shuttle"
-            ? "recommended"
-            : "other"
-        );
+        setTab(selectedRide === "shuttle" ? "recommended" : "other");
       }
     } else {
       setSelected(hasTravelNeeds ? "shuttle" : null);
@@ -53,15 +52,28 @@ export default function SuitableRides({
       : rides.filter((ride) => ride.id !== "shuttle")
     : rides;
 
-
   const handleSelectRide = (rideId) => {
     setSelected(rideId);
   };
 
   const handleConfirm = () => {
-    if (selected) {
-      onDone?.(selected);
+    if (!selected) return;
+
+    // Shuttle and Compact require sharing preference
+    if (selected === "shuttle" || selected === "compact") {
+      setShowSharingPopup(true);
+      return;
     }
+
+    // Regular car: no sharing prompt
+    onDone?.(selected, false);
+  };
+
+  const handleSharingChoice = (wantsToShare) => {
+    setShowSharingPopup(false);
+
+    // Pass selected ride and sharing preference to App.jsx
+    onDone?.(selected, wantsToShare);
   };
 
   return (
@@ -83,8 +95,7 @@ export default function SuitableRides({
         <div className="choose-trip">
           <div>
             <strong>
-              {pickup || "Chinatown Point"} →{" "}
-              {destination || "SGH Block 3"}
+              {pickup || "Chinatown Point"} → {destination || "SGH Block 3"}
             </strong>
 
             <small>Est. 6min · 2.4km</small>
@@ -99,7 +110,6 @@ export default function SuitableRides({
           </button>
         </div>
 
-        {/* Tabs - only shown when travel needs are selected */}
         {hasTravelNeeds && (
           <div
             className="choose-tabs"
@@ -110,9 +120,7 @@ export default function SuitableRides({
               type="button"
               role="tab"
               aria-selected={tab === "recommended"}
-              className={
-                tab === "recommended" ? "active" : ""
-              }
+              className={tab === "recommended" ? "active" : ""}
               onClick={() => setTab("recommended")}
             >
               Recommended
@@ -130,20 +138,13 @@ export default function SuitableRides({
           </div>
         )}
 
-        {/* Recommendation Banner */}
         {hasTravelNeeds && tab === "recommended" && (
           <div className="best-banner">
-            <Star
-              size={21}
-              fill="#ffbf00"
-              color="#ffbf00"
-            />
-
+            <Star size={21} fill="#ffbf00" color="#ffbf00" />
             <span>Best for your needs</span>
           </div>
         )}
 
-        {/* Ride Cards */}
         <div className="choose-rides">
           {visibleRides.map((ride) => (
             <button
@@ -155,13 +156,8 @@ export default function SuitableRides({
               }`}
               aria-pressed={selected === ride.id}
             >
-              {/* Vehicle Image */}
-              <img
-                src={ride.image}
-                alt={ride.name}
-              />
+              <img src={ride.image} alt={ride.name} />
 
-              {/* Vehicle Information */}
               <span className="choose-ride-info">
                 <strong>{ride.name}</strong>
 
@@ -183,30 +179,33 @@ export default function SuitableRides({
                       <span> · </span>
                     </>
                   )}
-
                   Wait {ride.wait}
                 </span>
 
-                <b>{ride.fare}</b>
+                <b>
+                  {formatFare(
+                    getRideFare(
+                      ride.id,
+                      ride.id === selectedRide && sharingPreference === false
+                        ? false
+                        : true,
+                    ),
+                  )}
+                </b>
               </span>
 
-              {/* Selection Indicator */}
               {selected === ride.id ? (
                 <span className="choose-check">
                   <Check size={13} strokeWidth={4} />
                 </span>
               ) : (
-                <ChevronRight
-                  className="choose-chevron"
-                  size={19}
-                />
+                <ChevronRight className="choose-chevron" size={19} />
               )}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Bottom Confirmation */}
       <div className="choose-bottom">
         <button
           type="button"
@@ -217,6 +216,94 @@ export default function SuitableRides({
           Confirm Selection
         </button>
       </div>
+
+      {/* SHARING PREFERENCE POPUP */}
+      {showSharingPopup && (
+        <div
+          className="sharing-overlay"
+          onClick={() => setShowSharingPopup(false)}
+        >
+          <div
+            className="sharing-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sharing-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="sharing-close"
+              onClick={() => setShowSharingPopup(false)}
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="sharing-icon">
+              <Users size={28} />
+            </div>
+
+            <h2 id="sharing-title">Would you like to share your ride?</h2>
+
+            <p className="sharing-description">
+              Share your journey with other passengers, or enjoy a private ride.
+            </p>
+
+            <div className="sharing-options">
+              {/* SHARED RIDE */}
+              <button
+                type="button"
+                className="sharing-option share"
+                onClick={() => handleSharingChoice(true)}
+              >
+                <span className="sharing-option-icon">
+                  <Users size={22} />
+                </span>
+
+                <span className="sharing-option-text">
+                  <strong>Yes, share my ride</strong>
+
+                  <small>Travel with others and choose your seat</small>
+
+                  <b className="sharing-price">
+                    {formatFare(getRideFare(selected, true))}
+                  </b>
+                </span>
+
+                <ChevronRight size={20} />
+              </button>
+
+              {/* PRIVATE RIDE */}
+              <button
+                type="button"
+                className="sharing-option private"
+                onClick={() => handleSharingChoice(false)}
+              >
+                <span className="sharing-option-icon">
+                  <UserRound size={22} />
+                </span>
+
+                <span className="sharing-option-text">
+                  <strong>No, private ride</strong>
+
+                  <small>Travel privately without seat selection</small>
+
+                  <b className="sharing-price">
+                    {formatFare(getRideFare(selected, false))}
+                    <span className="sharing-price-label"> total</span>
+                  </b>
+                </span>
+
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
+            <p className="sharing-footer">
+              You can review your ride details before booking.
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

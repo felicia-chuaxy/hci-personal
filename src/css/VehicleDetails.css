@@ -1,6 +1,6 @@
 
 /*========== GLOBAL BOOKING PAGE STYLES ==========*/
-.booking-page {
+.vehicle-page {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -10,79 +10,16 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.booking-page button {
+.vehicle-page button {
   font-family: inherit;
 }
 
 /* =========================================================
-   2. BOOKING HEADER
-   ========================================================= */
-
-/* Header layout */
-.booking-header {
-  height: 101px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 19px;
-  position: relative;
-}
-
-/* Header title */
-.booking-header h1 {
-  font-size: 16px;
-  margin: 0;
-  font-weight: 750;
-}
-
-/* Back navigation button */
-.booking-header > button {
-  position: absolute;
-  left: 18px;
-  bottom: 15px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  background: none;
-  color: #777;
-  padding: 5px;
-}
-
-/* =========================================================
-   3. REUSABLE BOOKING BUTTONS
-   ========================================================= */
-
-/* Primary green button */
-.booking-primary {
-  height: 46px;
-  width: 100%;
-  border: 0;
-  border-radius: 24px;
-  background: #00a651;
-  color: white;
-  font-size: 14px;
-  font-weight: 750;
-}
-
-/* Secondary outline button */
-.booking-outline {
-  height: 45px;
-  width: 100%;
-  border: 1px solid #9db7a8;
-  border-radius: 24px;
-  background: transparent;
-  font-size: 13px;
-  color: #333;
-  font-weight: 650;
-}
-
-/* =========================================================
-   4. BOOKING FOOTER
+   BOOKING FOOTER
    ========================================================= */
 
 /* Footer container */
-.booking-footer {
+.vehicle-footer {
   margin-top: auto;
   padding: 12px 24px 32px;
   background: #fff;
@@ -90,12 +27,12 @@
 }
 
 /* Compact footer variation */
-.booking-footer.compact {
+.vehicle-footer.compact {
   padding-top: 8px;
 }
 
 /* =========================================================
-   5. VEHICLE DETAILS PAGE
+   VEHICLE DETAILS PAGE
    ========================================================= */
 
 /* Vehicle image container */
@@ -139,36 +76,37 @@
   flex: 1;
 }
 
-/* Vehicle name */
-.vehicle-info h1 {
-  font-size: 19px;
+.vehicle-title h1 {
+  font-size: 23px;
   margin: 0 0 6px;
 }
 
-/* Vehicle description */
-.vehicle-info p {
+.vehicle-title p {
   font-size: 12px;
-  line-height: 1.55;
-  margin: 0 0 23px;
+  line-height: 2;
   color: #555;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* =========================================================
-   6. VEHICLE FEATURES
+   VEHICLE FEATURES
    ========================================================= */
 
 /* Features grid layout */
 .vehicle-features {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 22px 10px;
+  gap: 28px 10px;
+
 }
 
 /* Individual feature */
 .vehicle-feature {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 /* Feature icon circle */
@@ -184,12 +122,13 @@
 
 /* Feature description */
 .vehicle-feature small {
-  font-size: 10px;
+  font-size: 12px;
   color: #444;
+  font-weight: 600;
 }
 
 /* =========================================================
-   7. FARE SUMMARY
+   FARE SUMMARY
    ========================================================= */
 
 /* Fare information container */

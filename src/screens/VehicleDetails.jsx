@@ -6,36 +6,60 @@ import {
   DoorOpen,
   Footprints,
   Users,
+  UserRound,
   Car,
   Armchair,
 } from "lucide-react";
 
-import { rides } from "../data/rideData";
+import {
+  getRideById,
+  getRideFare,
+  formatFare,
+} from "../data/rideData";
 
-// CSS Links
 import "../css/VehicleDetails.css";
 
-// Icons for each vehicle feature
-const featureIcons = {
-  "Step-free entry": Footprints,
-  "Roomy cabin": DoorOpen,
-  "Wheelchair friendly": Accessibility,
-  "Up to 8 passengers": Users,
-  "1 step-up": Footprints,
-  "Compact cabin": DoorOpen,
-  "Comfortable seating": Armchair,
-  "Car or taxi": Car,
-  "Standard entry": Footprints,
+const FEATURE_ICONS = {
+  footprints: Footprints,
+  door: DoorOpen,
+  accessibility: Accessibility,
+  users: Users,
+  armchair: Armchair,
+  car: Car,
 };
 
-export default function VehicleDetails({ selectedRide, onBack, onContinue }) {
+/**
+ * Reusable vehicle feature component.
+ */
+function VehicleFeature({ feature }) {
+  const Icon = FEATURE_ICONS[feature.icon] ?? Car;
 
-  const ride = rides.find((vehicle) => vehicle.id === selectedRide);
+  return (
+    <div className="vehicle-feature">
+      <span aria-hidden="true">
+        <Icon size={24} strokeWidth={1.8} />
+      </span>
 
-  // Handle missing vehicle selection
+      <small>{feature.label}</small>
+    </div>
+  );
+}
+
+/**
+ * Vehicle Details Screen
+ */
+export default function VehicleDetails({
+  selectedRide,
+  isSharing = false,
+  onBack,
+  onContinue,
+}) {
+  const ride = getRideById(selectedRide);
+
+  // No vehicle selected
   if (!ride) {
     return (
-      <section className="booking-page vehicle-details">
+      <section className="vehicle-page vehicle-details">
         <div className="vehicle-info">
           <h1>No vehicle selected</h1>
 
@@ -49,19 +73,31 @@ export default function VehicleDetails({ selectedRide, onBack, onContinue }) {
     );
   }
 
+  // Calculate fare based on sharing preference
+  const totalFare = getRideFare(ride.id, isSharing);
+  const formattedFare = formatFare(totalFare);
+
+  const isPrivateRide =
+    ride.id === "regular" || isSharing === false;
+
+  const handleContinue = () => {
+    onContinue?.(ride.id);
+  };
+
   return (
-    <section className="booking-page vehicle-details">
-      {/* Vehicle Image */}
+    <section className="vehicle-page vehicle-details">
+
+      {/* Vehicle Hero Image */}
       <div className="vehicle-photo">
         <img
-          src={ride.detailImage || ride.image}
+          src={ride.detailImage ?? ride.image}
           alt={`${ride.name} vehicle`}
         />
 
         <button
           type="button"
           className="photo-back"
-          aria-label="Back"
+          aria-label="Back to ride selection"
           onClick={onBack}
         >
           <ArrowLeft size={21} />
@@ -70,46 +106,54 @@ export default function VehicleDetails({ selectedRide, onBack, onContinue }) {
 
       {/* Vehicle Information */}
       <div className="vehicle-info">
-        <h1>{ride.name}</h1>
 
-        <p>{ride.description}</p>
-
-        {/* Dynamic Vehicle Features */}
-        <div className="vehicle-features">
-          {ride.features.map((feature) => {
-            const Icon = featureIcons[feature] || Car;
-
-            return (
-              <div className="vehicle-feature" key={feature}>
-                <span>
-                  <Icon size={20} />
-                </span>
-
-                <small>{feature}</small>
-              </div>
-            );
-          })}
+        <div className="vehicle-title">
+          <h1>{ride.name}</h1>
+          <p>{ride.description}</p>
         </div>
+
+        {/* Vehicle Features */}
+        <div className="vehicle-features">
+          {ride.features.map((feature) => (
+            <VehicleFeature
+              key={feature.id}
+              feature={feature}
+            />
+          ))}
+        </div>
+
       </div>
 
-      {/* Footer */}
-      <div className="booking-footer">
+      {/* Booking Footer */}
+      <div className="vehicle-footer">
+
         <div className="fare-summary">
-          <strong>{ride.fare}</strong>
+          <strong>{formattedFare}</strong>
 
-          <span>Flat fare per ride</span>
+          <span>
+            {isPrivateRide
+              ? "Total fare · Private ride"
+              : "Fare per passenger · Shared ride"}
+          </span>
 
-          <span className="fare-chevron">›</span>
+          <span
+            className="fare-chevron"
+            aria-hidden="true"
+          >
+            ›
+          </span>
         </div>
 
         <button
           type="button"
           className="booking-primary"
-          onClick={() => onContinue?.(ride.id)}
+          onClick={handleContinue}
         >
           Confirm {ride.name}
         </button>
+
       </div>
+
     </section>
   );
 }

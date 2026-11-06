@@ -1,51 +1,184 @@
+
 import React, { useState } from "react";
-import { ArrowLeft, Phone, Check } from "lucide-react";
 
-import { rides } from "../data/rideData";
-import { BusFront } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  BusFront,
+  CarFront,
+} from "lucide-react";
 
-// IMAGE
-import shuttleImage from "../assets/grabair-shuttle.png";
-import shuttleSeatPlan from "../assets/seating-plan.png";
-import compactSeatPlan from "../assets/compact-seating-plan.png";
+import { getRideById } from "../data/rideData";
 
-// CSS Links
 import "../css/BookingFlow.css";
 
-// Shuttle seating layout
-const shuttleSeats = [
-  { id: "A1", x: 30, y: 26 },
-  { id: "B1", x: 69, y: 26 },
-  { id: "A2", x: 30, y: 38 },
-  { id: "B2", x: 69, y: 38 },
-  { id: "A3", x: 30, y: 51 },
-  { id: "B3", x: 69, y: 51 },
-  { id: "A4", x: 30, y: 82 },
-  { id: "Priority", x: 69, y: 82 },
-];
+/* =========================================
+   UTILITIES
+========================================= */
 
-// Compact seating layout
-const compactSeats = [
-  { id: "A1", x: 33, y: 34 },
-  { id: "B1", x: 67, y: 34 },
-  { id: "A2", x: 33, y: 50 },
-  { id: "B2", x: 67, y: 50 },
-  { id: "Priority", x: 67, y: 72 },
-];
+/**
+ * Get a readable description for a seat.
+ */
+const getSeatDescription = (seat) => {
+  if (!seat) {
+    return "Choose an available seat";
+  }
 
-// Vehicle-specific settings
-const seatConfigurations = {
-  shuttle: {
-    seats: shuttleSeats,
-    seatPlan: shuttleSeatPlan,
-    unavailable: ["A2", "B3"],
-  },
-  compact: {
-    seats: compactSeats,
-    seatPlan: compactSeatPlan,
-    unavailable: [],
-  },
+  if (seat.type === "priority") {
+    return "Priority seating";
+  }
+
+  const side = seat.id.startsWith("A")
+    ? "Left side"
+    : "Right side";
+
+  return `Standard seat · ${side}`;
 };
+
+/* =========================================
+   SEAT HOTSPOT
+========================================= */
+
+function SeatHotspot({
+  seat,
+  isSelected,
+  isUnavailable,
+  onSelect,
+}) {
+  return (
+    <button
+      type="button"
+      className={[
+        "seat-hotspot",
+        isSelected ? "is-selected" : "",
+        isUnavailable ? "is-unavailable" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      style={{
+        left: `${seat.x}%`,
+        top: `${seat.y}%`,
+      }}
+      disabled={isUnavailable}
+      aria-label={`${
+        seat.type === "priority"
+          ? "Priority seat"
+          : `Seat ${seat.id}`
+      }, ${
+        isUnavailable
+          ? "unavailable"
+          : isSelected
+            ? "selected"
+            : "available"
+      }`}
+      aria-pressed={isSelected}
+      onClick={() => onSelect(seat.id)}
+    >
+      {isSelected && (
+        <Check size={21} strokeWidth={4} />
+      )}
+    </button>
+  );
+}
+
+/* =========================================
+   SEATING MAP
+========================================= */
+
+function SeatingMap({
+  ride,
+  selectedSeat,
+  onSelect,
+}) {
+  const { layoutImage, seats, unavailableSeats } =
+    ride.seating;
+
+  const unavailableSet = new Set(unavailableSeats);
+
+  return (
+    <div className="seat-scroll">
+      <div className={`seat-map seat-map--${ride.id}`}>
+
+        <img
+          src={layoutImage}
+          alt={`${ride.name} seating arrangement`}
+        />
+
+        {seats.map((seat) => (
+          <SeatHotspot
+            key={seat.id}
+            seat={seat}
+            isSelected={selectedSeat === seat.id}
+            isUnavailable={unavailableSet.has(seat.id)}
+            onSelect={onSelect}
+          />
+        ))}
+
+      </div>
+    </div>
+  );
+}
+
+/* =========================================
+   SEAT LEGEND
+========================================= */
+
+function SeatLegend() {
+  return (
+    <div className="seat-legend">
+      <span>
+        <i className="legend-free" />
+        Available
+      </span>
+
+      <span>
+        <i className="legend-picked" />
+        Selected
+      </span>
+
+      <span>
+        <i className="legend-blocked" />
+        Unavailable
+      </span>
+    </div>
+  );
+}
+
+/* =========================================
+   SELECTED SEAT SUMMARY
+========================================= */
+
+function SelectedSeatSummary({
+  ride,
+  seat,
+}) {
+  const VehicleIcon =
+    ride.id === "shuttle" ? BusFront : CarFront;
+
+  return (
+    <div className="seat-picked">
+      <span className="bus-circle">
+        <VehicleIcon size={17} />
+      </span>
+
+      <div>
+        <strong>
+          {seat
+            ? `Seat ${seat.id}`
+            : "No seat selected"}
+        </strong>
+
+        <small>
+          {getSeatDescription(seat)}
+        </small>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================
+   MAIN BOOK SEAT COMPONENT
+========================================= */
 
 export default function BookSeat({
   selectedRide,
@@ -58,174 +191,160 @@ export default function BookSeat({
 }) {
   const [error, setError] = useState("");
 
-  // Find the selected vehicle
-  const ride = rides.find((vehicle) => vehicle.id === selectedRide);
+  /* -----------------------------------------
+     SELECTED VEHICLE
+  ----------------------------------------- */
 
-  // Detect which seating plan to display
-  const vehicleType = ride?.name?.toLowerCase().includes("compact")
-    ? "compact"
-    : "shuttle";
+  const ride = getRideById(selectedRide);
 
-  const config = seatConfigurations[vehicleType];
+  const seating = ride?.seating;
 
-  const { seats, seatPlan, unavailable } = config;
+  /* -----------------------------------------
+     VALIDATE SELECTED SEAT
+  ----------------------------------------- */
 
-  // Only accept a seat that exists and is available
-  const selectedSeatIsValid =
-    seats.some((item) => item.id === seat) && !unavailable.includes(seat);
+  const selectedSeat = seating?.seats.find(
+    (item) =>
+      item.id === seat &&
+      !seating.unavailableSeats.includes(item.id),
+  ) ?? null;
 
-  const selectedSeat = selectedSeatIsValid ? seat : null;
-
-  // Display appropriate seat description
-  const getSeatDescription = (seatId) => {
-    if (!seatId) return "Choose an available seat";
-
-    if (seatId === "Priority") {
-      return "Priority seating";
-    }
-
-    const side = seatId.startsWith("A") ? "Left side" : "Right side";
-
-    return `Standard seat · ${side}`;
-  };
-
-  if (!ride) {
-    return (
-      <section className="booking-page seat-page">
-        <header className="booking-header">
-          <button type="button" onClick={onBack}>
-            <ArrowLeft size={20} />
-          </button>
-          <h1>Choose your seat</h1>
-        </header>
-        <p>Please select a vehicle first.</p>
-      </section>
-    );
-  }
+  /* -----------------------------------------
+     EVENT HANDLERS
+  ----------------------------------------- */
 
   const handleSeatSelection = (seatId) => {
-    if (unavailable.includes(seatId)) return;
+    if (!seating) return;
 
-    setSeat(seatId);
+    const isValid = seating.seats.some(
+      (item) =>
+        item.id === seatId &&
+        !seating.unavailableSeats.includes(seatId),
+    );
+
+    if (!isValid) return;
+
+    setSeat?.(seatId);
     setError("");
   };
 
   const handleContinue = () => {
     if (!selectedSeat) {
-      setError("Please select a seat to continue");
+      setError("Please select an available seat to continue.");
       return;
     }
 
+    setError("");
     onContinue?.();
   };
 
+  /* -----------------------------------------
+     MISSING VEHICLE
+  ----------------------------------------- */
+
+  if (!ride || !seating) {
+    return (
+      <section className="booking-page seat-page">
+        <header className="booking-header">
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Back"
+          >
+            <ArrowLeft size={20} />
+          </button>
+
+          <h1>Choose your seat</h1>
+        </header>
+
+        <div className="seat-top">
+          <p>Please select a vehicle first.</p>
+        </div>
+      </section>
+    );
+  }
+
+  /* -----------------------------------------
+     RENDER
+  ----------------------------------------- */
+
   return (
     <section className="booking-page seat-page">
-      {/* Header */}
+
+      {/* HEADER */}
       <header className="booking-header">
-        <button type="button" onClick={onBack} aria-label="Back">
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Back to previous screen"
+        >
           <ArrowLeft size={20} />
         </button>
 
         <h1>Choose your seat</h1>
       </header>
 
-      {/* Selected vehicle information */}
+      {/* VEHICLE SUMMARY */}
       <div className="seat-top">
-        <img src={ride.image || shuttleImage} alt={ride.name} />
+        <img
+          src={ride.image}
+          alt={`${ride.name} vehicle`}
+        />
 
         <div>
           <strong>{ride.name}</strong>
 
-          {/* Dynamic pickup and destination */}
           <small className="seat-route">
-            <span>{pickup || "Select pickup location"}</span>
+            <span>
+              {pickup || "Select pickup location"}
+            </span>
 
-            <span className="route-arrow"> → </span>
+            <span className="route-arrow">
+              {" → "}
+            </span>
 
-            <span>{destination || "Select destination"}</span>
+            <span>
+              {destination || "Select destination"}
+            </span>
           </small>
 
           <small>
-            <b>{ride.fare}</b> · Flat fare per ride
+            <b>{ride.fare}</b>
+            {" · Flat fare per ride"}
           </small>
         </div>
       </div>
 
-      {/* Dynamic seat plan */}
-      <div className="seat-scroll">
-        <div className={`seat-map seat-map--${vehicleType}`}>
-          <img src={seatPlan} alt={`${ride.name} seating arrangement`} />
+      {/* INTERACTIVE SEAT MAP */}
+      <SeatingMap
+        ride={ride}
+        selectedSeat={selectedSeat?.id}
+        onSelect={handleSeatSelection}
+      />
 
-          {seats.map(({ id, x, y }) => {
-            const isUnavailable = unavailable.includes(id);
-
-            const isSelected = selectedSeat === id;
-
-            return (
-              <button
-                type="button"
-                key={id}
-                disabled={isUnavailable}
-                className={`seat-hotspot ${isSelected ? "is-selected" : ""} ${
-                  isUnavailable ? "is-unavailable" : ""
-                }`}
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                }}
-                onClick={() => handleSeatSelection(id)}
-                aria-label={`${id} ${
-                  isUnavailable
-                    ? "unavailable"
-                    : isSelected
-                      ? "selected"
-                      : "available"
-                }`}
-                aria-pressed={isSelected}
-              >
-                {isSelected && <Check size={21} strokeWidth={4} />}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Bottom section */}
+      {/* BOTTOM SECTION */}
       <div className="seat-bottom">
-        <div className="seat-legend">
-          <span>
-            <i className="legend-free" />
-            Available
-          </span>
 
-          <span>
-            <i className="legend-picked" />
-            Selected
-          </span>
+        {/* SEAT LEGEND */}
+        <SeatLegend />
 
-          <span>
-            <i className="legend-blocked" />
-            Unavailable
-          </span>
-        </div>
+        {/* SELECTED SEAT */}
+        <SelectedSeatSummary
+          ride={ride}
+          seat={selectedSeat}
+        />
 
-        <div className="seat-picked">
-          <span className="bus-circle">
-            <BusFront size={17} />
-          </span>
+        {/* VALIDATION MESSAGE */}
+        {error && (
+          <small
+            className="seat-error"
+            role="alert"
+          >
+            {error}
+          </small>
+        )}
 
-          <div>
-            <strong>
-              {selectedSeat ? `Seat ${selectedSeat}` : "No seat selected"}
-            </strong>
-
-            <small>{getSeatDescription(selectedSeat)}</small>
-          </div>
-        </div>
-
-        {error && <small className="seat-error">{error}</small>}
-
+        {/* CONFIRM BUTTON */}
         <button
           type="button"
           className="booking-primary"
@@ -233,6 +352,7 @@ export default function BookSeat({
         >
           Confirm Seat
         </button>
+
       </div>
     </section>
   );
