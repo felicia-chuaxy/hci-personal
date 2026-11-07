@@ -43,11 +43,20 @@
   padding: 9px 2px;
   border-bottom: 1px solid #eee;
 }
+
 .review-line > div { display: grid; gap: 3px; min-width: 0; }
 .review-line small { font-size: 10px; color: #777; }
 .review-line strong { font-size: 11px; overflow-wrap: anywhere; }
 
-.ride-metrics {
+
+.review-needs > div { display: flex; align-items: center; gap: 8px; }
+.review-needs span { display: grid; gap: 3px; }
+.review-needs small { font-size: 9px; color: #666; }
+.review-needs strong { font-size: 11px; }
+
+
+
+.ride-metrics, .review-needs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
@@ -55,6 +64,7 @@
   margin-left: 2px;
   border-bottom: 1px solid #eee;
 }
+
 .ride-metrics > div { display: flex; align-items: center; gap: 8px; }
 .ride-metrics span { display: grid; gap: 3px; }
 .ride-metrics small { font-size: 9px; color: #666; }
@@ -65,10 +75,22 @@
   align-items: center;
   gap: 8px;
   padding: 11px 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 .ride-payment strong { margin-left: auto; }
 .confirm-page .booking-header, .confirm-page .booking-footer {
   position: relative;
   z-index: 10;
 }
+
+
+/* Travel Needs */
+.review-need-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: black;
+  font-size: 11px;
+  font-weight: 600;
+}
+

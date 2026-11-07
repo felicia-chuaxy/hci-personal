@@ -6,14 +6,12 @@ import {
   Route,
   Armchair,
   CreditCard,
+  HandHelping,
 } from "lucide-react";
 
-import { rides } from "../data/rideData";
+import { getRideFare, formatFare, rides } from "../data/rideData";
 import shuttleImage from "../assets/grabair-shuttle.png";
-
-// Reuse the Navigation Screen map and routing
 import NavigationMap from "../components/NavigationMap.jsx";
-
 import { PLACES, lookupPlace, getDrivingRoute } from "../js/geo.js";
 
 import "leaflet/dist/leaflet.css";
@@ -28,7 +26,9 @@ export default function ConfirmRide({
   pickup,
   destination,
   seat,
+  needs = [],
   selectedRide,
+  isSharing = false,
   onBack,
   onContinue,
   setBookingRoute,
@@ -38,7 +38,11 @@ export default function ConfirmRide({
 
   const vehicleName = ride?.name || "Ai.R Shuttle";
   const vehicleImage = ride?.image || shuttleImage;
-  const vehicleFare = ride?.fare || "$3.50";
+
+  // Calculate fare based on sharing preference
+  const totalFare = getRideFare(selectedRide, isSharing);
+  const vehicleFare = formatFare(totalFare);
+  // const vehicleFare = ride?.fare || "$3.50";
 
   // LOCATIONS
   const pickupLocation = pickup?.trim() || "Not selected";
@@ -171,12 +175,44 @@ export default function ConfirmRide({
         </div>
 
         {/* SEAT */}
-        <div className="review-line">
-          <Armchair size={20} color="#777" />
 
+        {/* SEAT & TRAVEL NEEDS */}
+        <div className="review-needs">
+          {/* SEAT */}
           <div>
-            <small>Seat</small>
-            <strong>{seat ? `Seat ${seat}` : "Not selected"}</strong>
+            <Armchair size={20} color="#777" />
+            <span>
+              <small>Seat</small>
+        
+
+              <strong>
+                {isSharing
+                  ? seat
+                    ? `Seat ${seat}`
+                    : "Not selected"
+                  : "No seat selection required"}
+              </strong>
+            </span>
+          </div>
+
+          {/* TRAVEL NEEDS */}
+          <div>
+            <HandHelping size={20} color="#777" />
+            <span>
+              <small>Travel Needs</small>
+
+              {needs.filter(Boolean).length > 0 ? (
+                <div className="review-travel-needs">
+                  {needs.filter(Boolean).map((need) => (
+                    <span className="review-need-tag" key={need}>
+                      {need}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <strong>None selected</strong>
+              )}
+            </span>
           </div>
         </div>
 

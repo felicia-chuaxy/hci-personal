@@ -25,11 +25,12 @@ import HelpSupport from "./screens/HelpSupport.jsx";
 import AdminController from "./components/AdminController.jsx";
 import ScenarioScreen from "./screens/ScenarioScreen.jsx";
 
-
 // Timing Configuration (seconds)
 const CONFIRMED_SECONDS = 10;
 const SHUTTLE_TRAVEL_SECONDS = 20;
 const RIDE_SECONDS = 20;
+const SHARED_PICKUP_AT = 0.4;
+const SHARED_PICKUP_STOP_SECONDS = 6;
 const TIMER_INTERVAL_MS = 250;
 
 export default function App() {
@@ -61,6 +62,7 @@ export default function App() {
 
   // Suitable Vehicle
   const [vehicle, setVehicle] = useState("shuttle");
+  const [isSharing, setIsSharing] = useState(null);
 
   // Vehicle Seat
   const [seat, setSeat] = useState(null);
@@ -137,13 +139,42 @@ export default function App() {
     return () => clearInterval(interval);
   }, [rideStartedAt]);
 
-  const rideProgress =
-    rideStartedAt === null
-      ? 0
-      : Math.min(
-          1,
-          Math.max(0, (rideTick - rideStartedAt) / (RIDE_SECONDS * 1000)),
-        );
+  const sharedRide =
+    isSharing === true && (vehicle === "shuttle" || vehicle === "compact");
+  const rideElapsed =
+    rideStartedAt === null ? 0 : Math.max(0, (rideTick - rideStartedAt) / 1000);
+  const stopBeginsAt = RIDE_SECONDS * SHARED_PICKUP_AT;
+  const pausedSeconds = sharedRide
+    ? Math.min(
+        SHARED_PICKUP_STOP_SECONDS,
+        Math.max(0, rideElapsed - stopBeginsAt),
+      )
+    : 0;
+  const movingSeconds = Math.max(0, rideElapsed - pausedSeconds);
+  const rideProgress = Math.min(1, movingSeconds / RIDE_SECONDS);
+
+  const sharedPickupStage =
+    !sharedRide || rideStartedAt === null
+      ? "none"
+      : rideElapsed < stopBeginsAt * 0.75
+        ? "scheduled"
+        : rideElapsed < stopBeginsAt
+          ? "approaching"
+          : rideElapsed < stopBeginsAt + SHARED_PICKUP_STOP_SECONDS
+            ? "boarding"
+            : rideProgress < 0.7
+              ? "pickedUp"
+              : "complete";
+
+  const pickupBoardingProgress =
+    sharedPickupStage === "boarding"
+      ? pausedSeconds / SHARED_PICKUP_STOP_SECONDS
+      : 0;
+  const remainingRideSeconds = Math.max(
+    0,
+    RIDE_SECONDS * (1 - rideProgress) +
+      (sharedRide ? SHARED_PICKUP_STOP_SECONDS - pausedSeconds : 0),
+  );
   const beginRide = () => {
     const timestamp = Date.now();
     setRideStartedAt(timestamp);
@@ -189,6 +220,7 @@ export default function App() {
     setTrackingStartedAt(null);
     setCheckInValue("");
     setEditingLocations(false);
+    setIsSharing(null);
 
     setActiveScenario(null);
     setScenarioCompleted(false);
@@ -216,6 +248,7 @@ export default function App() {
     setNeeds([]);
     setVehicle("shuttle");
     setSeat(null);
+    setIsSharing(null);
     setCheckInValue("");
     setRating(0);
     setEditingLocations(false);
@@ -287,17 +320,18 @@ export default function App() {
         onContinue={() => setPage("vehicle")}
       />
     ),
-
     vehicle: (
       <SuitableVehicle
         pickup={pickup}
         destination={destination}
         needs={needs}
         selectedRide={vehicle}
+        sharingPreference={isSharing}
         onBack={() => setPage("needs")}
         onEdit={editLocations}
-        onDone={(id) => {
+        onDone={(id, wantsToShare) => {
           setVehicle(id);
+          setIsSharing(wantsToShare);
           setSeat(null);
           setPage("details");
         }}
@@ -308,14 +342,21 @@ export default function App() {
       <VehicleDetails
         selectedRide={vehicle}
         onBack={() => setPage("vehicle")}
+        isSharing={isSharing}
         onContinue={(rideId) => {
           const selectedId = rideId || vehicle;
-          setSeat(null);
 
-          if (selectedId === "shuttle" || selectedId === "compact") {
+          setVehicle(selectedId);
+
+          // Reset seat if vehicle changes
+          setSeat(null);
+          if (
+            (selectedId === "shuttle" || selectedId === "compact") &&
+            isSharing === true
+          ) {
             setPage("seat");
           } else {
-            setPage("");
+            setPage("confirm");
           }
         }}
       />
@@ -337,14 +378,21 @@ export default function App() {
       <ConfirmRide
         pickup={pickup}
         destination={destination}
-        seat={seat}
+        needs={needs}
+        seat={isSharing ? seat : null}
         selectedRide={vehicle}
+        isSharing={isSharing}
         setBookingRoute={setBookingRoute}
-        onBack={() =>
-          setPage(
-            vehicle === "shuttle" || vehicle === "compact" ? "seat" : "details",
-          )
-        }
+        onBack={() => {
+          if (
+            isSharing === true &&
+            (vehicle === "shuttle" || vehicle === "compact")
+          ) {
+            setPage("seat");
+          } else {
+            setPage("details");
+          }
+        }}
         onContinue={() => setPage("booked")}
       />
     ),
@@ -352,11 +400,14 @@ export default function App() {
       <BookingConfirmed
         pickup={pickup}
         destination={destination}
-        seat={seat}
+        seat={isSharing ? seat : null}
+        needs={needs}
         bookingRoute={bookingRoute}
+        selectedRide={vehicle}
+        isSharing={isSharing}
         onViewTrip={startTracking}
         onCancel={editLocations}
-        selectedRide={vehicle}
+        onBack={() => setPage("confirm")}
       />
     ),
 
@@ -368,6 +419,7 @@ export default function App() {
         bookingRoute={bookingRoute}
         selectedRide={vehicle}
         seat={seat}
+        isSharing={isSharing}
         progress={tripProgress}
         etaSeconds={etaSeconds}
         elapsedSeconds={elapsed}
@@ -439,7 +491,12 @@ export default function App() {
         destination={destination}
         bookingRoute={bookingRoute}
         progress={rideProgress}
+        selectedRide={vehicle}
         durationSeconds={RIDE_SECONDS}
+        isSharing={sharedRide}
+        sharedPickupStage={sharedPickupStage}
+        pickupBoardingProgress={pickupBoardingProgress}
+        remainingRideSeconds={remainingRideSeconds}
         onBack={() => setPage("boardingProgress")}
         onSafetyComplete={() => {
           const timestamp = Date.now();

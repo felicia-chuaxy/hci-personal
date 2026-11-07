@@ -1,21 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft,
   Navigation,
   CheckCircle2,
-  BellRing,
-  MapPin,
   Clock3,
   Route,
   BusFront,
   Check,
-  CircleHelp
+  CircleHelp,
+  UsersRound,
+  MapPin,
 } from "lucide-react";
 
 import NavigationMap from "../components/NavigationMap.jsx";
 import { lookupPlace } from "../js/geo.js";
-import shuttle from "../assets/grabair-shuttle.png";
+
 import HelpSupport from "./HelpSupport.jsx";
+import { rides, getRideFare, formatFare } from "../data/rideData.js";
 
 import "leaflet/dist/leaflet.css";
 import "../css/Journey.css";
@@ -37,9 +37,20 @@ export default function TripEnRoute({
   progress = 0,
   durationSeconds = 200,
   onDone,
+  selectedRide = "shuttle",
+  isSharing = false,
+  sharedPickupStage = "none",
+  pickupBoardingProgress = 0,
+  remainingRideSeconds,
   onSafetyComplete,
 }) {
   const safetyCallbackRef = useRef(onSafetyComplete);
+
+  const selectedVehicle =
+    rides.find((ride) => ride.id === selectedRide) || rides[0];
+
+  const totalFare = getRideFare(selectedRide, isSharing);
+  const formattedFare = formatFare(totalFare);
 
   // SAFETY CHECK STATES
   const [safetyElapsed, setSafetyElapsed] = useState(0);
@@ -153,7 +164,9 @@ export default function TripEnRoute({
   // REMAINING TIME
   const remainingSeconds = Math.max(
     0,
-    Math.ceil((durationSeconds ?? 0) * (1 - safeProgress)),
+    Math.ceil(
+      remainingRideSeconds ?? (durationSeconds ?? 0) * (1 - safeProgress),
+    ),
   );
 
   const remainingMinutes = Math.ceil(remainingSeconds / 60);
@@ -188,6 +201,21 @@ export default function TripEnRoute({
     statusDescription = "Please alight safely and remember your belongings.";
   }
 
+  if (safetyComplete && isSharing && sharedPickupStage === "approaching") {
+    statusTitle = "Shared passenger pickup ahead";
+    statusDescription = "We'll make a short stop to pick up another passenger.";
+  }
+  if (safetyComplete && isSharing && sharedPickupStage === "boarding") {
+    statusTitle = "Picking up another passenger";
+    statusDescription =
+      "The vehicle is stopped. We'll continue once boarding is complete.";
+  }
+  if (safetyComplete && isSharing && sharedPickupStage === "pickedUp") {
+    statusTitle = "Passenger onboard — journey resumed";
+    statusDescription =
+      "Everyone is seated and we're heading to your destination.";
+  }
+
   // SAFETY CHECK STATUS
   let safetyTitle = "Boarding in progress";
   let safetyDescription =
@@ -216,17 +244,6 @@ export default function TripEnRoute({
 
   return (
     <main className="journey-screen">
-      {/* HEADER */}
-      {/* <header className="journey-header">
-        <strong>
-          {isArrived
-            ? "Trip arrived"
-            : safetyComplete
-              ? "Trip in progress"
-              : "Preparing for departure"}
-        </strong>
-      </header> */}
-
       {/* HEADER */}
       <header className="journey-header">
         <strong>
@@ -277,14 +294,22 @@ export default function TripEnRoute({
 
         {/* SHUTTLE DETAILS */}
         <div className="journey-vehicle">
-          <img src={shuttle} alt="Ai.R Shuttle" />
+          <img
+            src={selectedVehicle.image}
+            alt={selectedVehicle.name}
+            className="journey-vehicle-image"
+          />
 
           <div>
-            <h2>Ai.R Shuttle</h2>
-            <small>Operated by Grab</small>
+            <h2>{selectedVehicle.name}</h2>
+            <small>
+              {selectedRide === "regular" || !isSharing
+                ? "Private ride · Operated by Grab"
+                : "Shared ride · Operated by Grab"}
+            </small>
           </div>
 
-          <b>$3.50</b>
+          <b>{formattedFare}</b>
         </div>
 
         {/* AUTOMATIC SAFETY CHECK */}
@@ -339,6 +364,60 @@ export default function TripEnRoute({
                 <p>{statusDescription}</p>
               </div>
             </div>
+
+            {/* SIMULATED SHARED-RIDE PICKUP */}
+            {isSharing &&
+              ["approaching", "boarding", "pickedUp"].includes(
+                sharedPickupStage,
+              ) && (
+                <div
+                  className={`shared-pickup-card shared-pickup-${sharedPickupStage}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div className="shared-pickup-top">
+                    <span className="shared-pickup-icon">
+                      {sharedPickupStage === "pickedUp" ? (
+                        <CheckCircle2 size={19} />
+                      ) : sharedPickupStage === "boarding" ? (
+                        <UsersRound size={19} />
+                      ) : (
+                        <MapPin size={19} />
+                      )}
+                    </span>
+                    <div className="shared-pickup-copy">
+                      <strong>
+                        {sharedPickupStage === "approaching"
+                          ? "Upcoming passenger pickup"
+                          : sharedPickupStage === "boarding"
+                            ? "Passenger boarding"
+                            : "Pickup complete"}
+                      </strong>
+                      <small>
+                        {sharedPickupStage === "approaching"
+                          ? "Approaching an additional pickup point"
+                          : sharedPickupStage === "boarding"
+                            ? "Vehicle paused while the passenger boards"
+                            : "The passenger is onboard. Your trip is continuing."}
+                      </small>
+                    </div>
+                  </div>
+                  {sharedPickupStage === "boarding" && (
+                    <div
+                      className="shared-pickup-progress"
+                      role="progressbar"
+                      aria-label="Additional passenger boarding"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={Math.round(pickupBoardingProgress * 100)}
+                    >
+                      <div
+                        style={{ width: `${pickupBoardingProgress * 100}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
 
             {/* REMAINING DISTANCE AND TIME */}
             <div className="journey-live-metrics">

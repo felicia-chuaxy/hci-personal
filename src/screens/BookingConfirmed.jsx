@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Check,
   MapPin,
@@ -6,16 +7,94 @@ import {
   Clock3,
   Route,
   ArrowLeft,
+  HandHelping,
 } from "lucide-react";
 
-import { rides } from "../data/rideData";
-import shuttleImage from "../assets/grabair-shuttle.png";
+import { getRideById, getRideFare, formatFare } from "../data/rideData";
+
 import "../css/BookingFlow.css";
 
-const formatDistance = (metres) =>
-  metres >= 1000
-    ? `${(metres / 1000).toFixed(1)} km`
-    : `${Math.round(metres)} m`;
+//   UTILITY FUNCTIONS
+const formatDistance = (metres) => {
+  const value = Number(metres);
+
+  if (!Number.isFinite(value) || value < 0) {
+    return "—";
+  }
+
+  return value >= 1000
+    ? `${(value / 1000).toFixed(1)} km`
+    : `${Math.round(value)} m`;
+};
+
+/**
+ * Format estimated journey duration.
+ */
+const formatDuration = (seconds) => {
+  const value = Number(seconds);
+
+  if (!Number.isFinite(value) || value < 0) {
+    return "—";
+  }
+
+  return `${Math.max(1, Math.ceil(value / 60))} min`;
+};
+
+//   REUSABLE BOOKING DETAIL ROW
+function BookingDetail({ icon: Icon, label, value, color = "#777" }) {
+  return (
+    <div className="review-line">
+      <Icon size={20} color={color} aria-hidden="true" />
+
+      <div>
+        <small>{label}</small>
+        <strong>{value}</strong>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================
+   REUSABLE JOURNEY METRIC
+========================================= */
+
+function JourneyMetric({ icon: Icon, label, value }) {
+  return (
+    <div>
+      <Icon size={20} aria-hidden="true" />
+
+      <span>
+        <small>{label}</small>
+        <strong>{value}</strong>
+      </span>
+    </div>
+  );
+}
+
+/* =========================================
+   SELECTED VEHICLE SUMMARY
+========================================= */
+
+function VehicleSummary({ vehicle, isSharing }) {
+  const totalFare = getRideFare(vehicle.id, isSharing);
+  const formattedFare = formatFare(totalFare);
+
+  return (
+    <div className="success-shuttle">
+      <img src={vehicle.image} alt={`${vehicle.name} vehicle`} />
+
+      <div>
+        <strong>{vehicle.name}</strong>
+
+        <b>{formattedFare}</b>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================
+   MAIN BOOKING CONFIRMED SCREEN
+========================================= */
 
 export default function BookingConfirmed({
   pickup,
@@ -23,27 +102,48 @@ export default function BookingConfirmed({
   seat,
   selectedRide,
   bookingRoute,
+  bookingReference = "GRABAIR2345678",
   onViewTrip,
   onCancel,
+  isSharing = false,
   onBack,
+  needs = [],
 }) {
-  // Get the same selected vehicle as ConfirmRide
-  const ride = rides.find((vehicle) => vehicle.id === selectedRide);
+  /* -----------------------------------------
+     SELECTED VEHICLE
+  ----------------------------------------- */
 
-  const vehicleName = ride?.name || "Ai.R Shuttle";
-  const vehicleImage = ride?.image || shuttleImage;
-  const vehicleFare = ride?.fare || "$3.50";
+  const vehicle = getRideById(selectedRide);
 
-  // Route information from ConfirmRide
-  const routeDistance =
-    bookingRoute?.distance != null
-      ? formatDistance(bookingRoute.distance)
-      : "—";
+  // Only use the selected vehicle's data.
+  // Never show a different ride by accident.
+  const vehicleName = vehicle?.name ?? "Your ride";
 
-  const routeEstimate =
-    bookingRoute?.duration != null && !bookingRoute?.isApproximate
-      ? `${Math.max(1, Math.round(bookingRoute.duration / 60))} min`
-      : "—";
+  /* -----------------------------------------
+     ROUTE INFORMATION
+  ----------------------------------------- */
+
+  const isApproximate = bookingRoute?.isApproximate === true;
+
+  const routeDistance = formatDistance(bookingRoute?.distance);
+
+  const routeEstimate = isApproximate
+    ? "—"
+    : formatDuration(bookingRoute?.duration);
+
+  /* -----------------------------------------
+     BOOKING INFORMATION
+  ----------------------------------------- */
+
+  const pickupName = pickup?.trim() || "Not selected";
+
+  const destinationName = destination?.trim() || "Not selected";
+
+  const selectedSeat = seat != null && seat !== "" ? `Seat ${seat}` : null;
+
+  /* -----------------------------------------
+     RENDER
+  ----------------------------------------- */
 
   return (
     <section className="booking-page booking-success">
@@ -54,7 +154,7 @@ export default function BookingConfirmed({
         </button>
       </header>
 
-      {/* SUCCESS HEADER */}
+      {/* SUCCESS MESSAGE */}
       <div className="success-title">
         <span className="success-icon">
           <Check size={25} strokeWidth={4} />
@@ -63,96 +163,95 @@ export default function BookingConfirmed({
         <h1>Ride Booked!</h1>
 
         <p>
-          Your shuttle has been booked
+          Your {vehicleName} has been booked
           <br />
-          successfully
+          successfully.
         </p>
       </div>
 
-      {/* BOOKING DETAILS CARD */}
+      {/* BOOKING DETAILS */}
       <div className="success-card">
-        {/* SELECTED SHUTTLE */}
-        <div className="success-shuttle">
-          <img src={vehicleImage} alt={vehicleName} />
+        {/* SELECTED VEHICLE */}
+        {vehicle && <VehicleSummary vehicle={vehicle} isSharing={isSharing} />}
 
-          <div>
-            <strong>{vehicleName}</strong>
-            <b>{vehicleFare}</b>
-          </div>
-        </div>
-
-        {/* PICKUP */}
-        <div className="review-line">
-          <MapPin size={20} color="#008c45" />
-
-          <div>
-            <small>Pick-up</small>
-            <strong>{pickup || "Not selected"}</strong>
-          </div>
-        </div>
+        {/* PICKUP LOCATION */}
+        <BookingDetail
+          icon={MapPin}
+          label="Pick-up"
+          value={pickupName}
+          color="#008c45"
+        />
 
         {/* DESTINATION */}
-        <div className="review-line">
-          <MapPin size={20} color="#f05248" />
+        <BookingDetail
+          icon={MapPin}
+          label="Drop-off"
+          value={destinationName}
+          color="#f05248"
+        />
 
+        {/* SEAT & TRAVEL NEEDS */}
+        <div className="review-needs">
+          {/* SELECTED SEAT */}
           <div>
-            <small>Drop-off</small>
-            <strong>{destination || "Not selected"}</strong>
-          </div>
-        </div>
-
-        {/* SEAT */}
-        {seat && (
-          <div className="review-line">
             <Armchair size={20} color="#777" />
 
-            <div>
-              <small>Seat</small>
-              <strong>Seat {seat}</strong>
-            </div>
-          </div>
-        )}
-
-        {/* ROUTE DISTANCE AND ESTIMATE */}
-        <div className="ride-metrics">
-          {/* DISTANCE */}
-          <div>
-            <Route size={20} />
-
             <span>
-              <small>Route distance</small>
-              <strong>{routeDistance}</strong>
+              <small>Seat</small>
+              <strong>{selectedSeat || "Not selected"}</strong>
             </span>
           </div>
 
-          {/* ESTIMATED JOURNEY TIME */}
+          {/* TRAVEL NEEDS */}
           <div>
-            <Clock3 size={20} />
+            <HandHelping size={20} color="#777" />
 
             <span>
-              <small>
-                {bookingRoute?.isApproximate
-                  ? "ETA unavailable"
-                  : "Route estimate"}
-              </small>
+              <small>Travel Needs</small>
 
-              <strong>{routeEstimate}</strong>
+              {needs.filter(Boolean).length > 0 ? (
+                <div className="review-travel-needs">
+                  {needs.filter(Boolean).map((need) => (
+                    <span className="review-need-tag" key={need}>
+                      {need}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <strong>None selected</strong>
+              )}
             </span>
           </div>
         </div>
 
-        {/* APPROXIMATE ROUTE MESSAGE */}
-        {bookingRoute?.isApproximate && (
+        {/* ROUTE METRICS */}
+        <div className="ride-metrics">
+          <JourneyMetric
+            icon={Route}
+            label="Route distance"
+            value={routeDistance}
+          />
+
+          <JourneyMetric
+            icon={Clock3}
+            label={isApproximate ? "ETA unavailable" : "Route estimate"}
+            value={routeEstimate}
+          />
+        </div>
+
+        {/* APPROXIMATE ROUTE NOTICE */}
+        {isApproximate && (
           <p className="route-note">
-            Road directions are unavailable; the distance is a straight-line
-            approximation.
+            Road directions are unavailable. The distance shown is a
+            straight-line approximation.
           </p>
         )}
 
         {/* BOOKING REFERENCE */}
         <div className="booking-number">
           <small>Booking ref.</small>
-          <strong>GRABAIR2345678</strong>
+
+          <strong>{bookingReference}</strong>
         </div>
       </div>
 
