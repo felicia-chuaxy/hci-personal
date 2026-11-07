@@ -517,8 +517,11 @@ export default function App() {
       <RideHistory
         pickup={pickup}
         destination={destination}
-        seat={seat}
+        seat={isSharing ? seat : null}
         rating={rating}
+        selectedRide={vehicle}
+        isSharing={isSharing}
+        bookingRoute={bookingRoute}
         onBack={() => setPage("tripCompleted")}
         onBookAgain={bookAnotherRide}
       />

@@ -1,34 +1,106 @@
+
 import React, { useState } from "react";
+
 import { ArrowLeft, MapPin } from "lucide-react";
-import shuttle from "../assets/grabair-shuttle.png";
+
+import {
+  getRideById,
+  getRideFare,
+  formatFare,
+} from "../data/rideData";
+
 import "../css/Journey.css";
+
 export default function RideHistory({
   pickup,
   destination,
   seat,
   rating,
+  selectedRide,
+  isSharing = false,
+  bookingRoute,
   onBack,
   onBookAgain,
 }) {
   const [dialog, setDialog] = useState("");
+
+  // Retrieve the selected vehicle
+  const vehicle = getRideById(selectedRide);
+
+  const vehicleName = vehicle?.name || "Your Ride";
+  const vehicleImage = vehicle?.image;
+
+  // Calculate fare based on sharing preference
+  const totalFare = getRideFare(selectedRide, isSharing);
+  const formattedFare = formatFare(totalFare);
+
+  const isPrivateRide =
+    selectedRide === "regular" || isSharing === false;
+
+  // Display seat only when seat selection was required
+  const seatDisplay =
+    !isPrivateRide && seat
+      ? `Seat ${seat}`
+      : "No seat selection required";
+
+  // Calculate route distance
+  const distance =
+    bookingRoute?.distance != null
+      ? `${(bookingRoute.distance / 1000).toFixed(1)} km`
+      : "—";
+
+  // Calculate journey duration
+  const duration =
+    bookingRoute?.duration != null &&
+    !bookingRoute?.isApproximate
+      ? `${Math.max(
+          1,
+          Math.round(bookingRoute.duration / 60)
+        )} mins`
+      : "—";
+
   return (
     <main className="journey-screen journey-history">
+
+      {/* HEADER */}
       <header className="journey-header">
-        <button aria-label="Back" onClick={onBack}>
+        <button
+          type="button"
+          aria-label="Back"
+          onClick={onBack}
+        >
           <ArrowLeft size={23} />
         </button>
+
         <strong>Trip Details</strong>
       </header>
+
       <div className="journey-history-content">
+
+        {/* SELECTED VEHICLE */}
         <div className="journey-history-ride">
-          <img src={shuttle} alt="Ai.R Shuttle" />
+          {vehicleImage && (
+            <img
+              src={vehicleImage}
+              alt={vehicleName}
+            />
+          )}
+
           <div>
-            <h2>Ai.R Shuttle</h2>
-            <small>Completed · Today</small>
+            <h2>{vehicleName}</h2>
+
+            <small>
+              Completed · Today ·
+              {isPrivateRide
+                ? " Private Ride"
+                : " Shared Ride"}
+            </small>
           </div>
         </div>
-        {/* Pickup and Destination */}
+
+        {/* PICKUP AND DESTINATION */}
         <div className="journey-history-route">
+
           <div className="journey-route-item">
             <div className="journey-route-icon pickup">
               <MapPin size={20} />
@@ -36,7 +108,7 @@ export default function RideHistory({
 
             <div className="journey-route-info">
               <span>PICK-UP LOCATION</span>
-              <strong>{pickup || ""}</strong>
+              <strong>{pickup || "Not selected"}</strong>
             </div>
           </div>
 
@@ -51,61 +123,122 @@ export default function RideHistory({
 
             <div className="journey-route-info">
               <span>DESTINATION</span>
-              <strong>{destination || ""}</strong>
+              <strong>{destination || "Not selected"}</strong>
             </div>
           </div>
+
         </div>
+
+        {/* JOURNEY INFORMATION */}
         <dl className="journey-facts">
+
           <div>
             <dt>Distance</dt>
-            <dd>2.4km</dd>
+            <dd>{distance}</dd>
           </div>
+
           <div>
             <dt>Duration</dt>
-            <dd>15 mins</dd>
+            <dd>{duration}</dd>
           </div>
+
           <div>
             <dt>Fare</dt>
-            <dd>$3.50</dd>
+            <dd>{formattedFare}</dd>
           </div>
+
           <div>
             <dt>Payment Method</dt>
             <dd>GrabPay</dd>
           </div>
+
+          <div>
+            <dt>Ride Type</dt>
+            <dd>
+              {isPrivateRide
+                ? "Private Ride"
+                : "Shared Ride"}
+            </dd>
+          </div>
+
           <div>
             <dt>Seat</dt>
-            <dd>{seat || "B2"}</dd>
+            <dd>{seatDisplay}</dd>
           </div>
+
           {rating > 0 && (
             <div>
               <dt>Your Rating</dt>
               <dd>{"★".repeat(rating)}</dd>
             </div>
           )}
+
         </dl>
 
+        {/* ACTION BUTTONS */}
         <div className="journey-history-actions">
-          <button onClick={() => setDialog("receipt")}>View Receipt</button>
+          <button
+            type="button"
+            onClick={() => setDialog("receipt")}
+          >
+            View Receipt
+          </button>
 
-          <button onClick={() => setDialog("support")}>Support</button>
+          <button
+            type="button"
+            onClick={() => setDialog("support")}
+          >
+            Support
+          </button>
         </div>
 
-        {/* Book another ride */}
-        <button className="primary" onClick={onBookAgain}>
+        {/* BOOK ANOTHER RIDE */}
+        <button
+          type="button"
+          className="primary"
+          onClick={onBookAgain}
+        >
           Book Another Ride
         </button>
+
       </div>
 
+      {/* RECEIPT / SUPPORT MODAL */}
       {dialog && (
-        <div className="journey-modal" onClick={() => setDialog("")}>
+        <div
+          className="journey-modal"
+          onClick={() => setDialog("")}
+        >
           <div onClick={(e) => e.stopPropagation()}>
-            <h3>{dialog === "receipt" ? "Ride Receipt" : "Support"}</h3>
+
+            <h3>
+              {dialog === "receipt"
+                ? "Ride Receipt"
+                : "Support"}
+            </h3>
+
             {dialog === "receipt" ? (
               <p>
-                Ai.R Shuttle · {pickup} → {destination}
+                {vehicleName}
+                {" · "}
+                {isPrivateRide
+                  ? "Private Ride"
+                  : "Shared Ride"}
+
                 <br />
-                Seat {seat || "B2"} · Total: $3.50
+
+                {pickup} → {destination}
+
                 <br />
+
+                {seatDisplay}
+
+                <br />
+
+                Total: {formattedFare}
+
+                <br />
+
                 Payment: GrabPay (demo)
               </p>
             ) : (
@@ -113,12 +246,19 @@ export default function RideHistory({
                 Contact the safety operator if you need help.
               </p>
             )}
-            <button className="journey-button" onClick={() => setDialog("")}>
+
+            <button
+              type="button"
+              className="journey-button"
+              onClick={() => setDialog("")}
+            >
               Close
             </button>
+
           </div>
         </div>
       )}
+
     </main>
   );
 }
