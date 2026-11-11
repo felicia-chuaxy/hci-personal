@@ -22,7 +22,7 @@ import L from "leaflet";
 import { PLACES, lookupPlace } from "../js/geo.js";
 
 import "leaflet/dist/leaflet.css";
-import "../css/PickUpNavigation.css";
+import "../css/PickupNavigation.css";
 
 // Convert supported location formats into coordinates
 const toCoordinates = (place) => {

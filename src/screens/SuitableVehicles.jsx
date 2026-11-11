@@ -21,6 +21,11 @@ export default function SuitableRides({
   onBack,
   onDone,
   onEdit,
+  // Optional (study mode): end at "Confirm Selection", custom card order, hide back/edit
+  onConfirmSelection,
+  rideOrder,
+  hideNav = false,
+  hideEdit = false,
 }) {
   const hasTravelNeeds = needs.length > 0;
 
@@ -46,11 +51,15 @@ export default function SuitableRides({
     }
   }, [selectedRide, hasTravelNeeds]);
 
+  const orderedRides = rideOrder
+    ? rideOrder.map((id) => rides.find((ride) => ride.id === id)).filter(Boolean)
+    : rides;
+
   const visibleRides = hasTravelNeeds
     ? tab === "recommended"
-      ? rides.filter((ride) => ride.id === "shuttle")
-      : rides.filter((ride) => ride.id !== "shuttle")
-    : rides;
+      ? orderedRides.filter((ride) => ride.id === "shuttle")
+      : orderedRides.filter((ride) => ride.id !== "shuttle")
+    : orderedRides;
 
   const handleSelectRide = (rideId) => {
     setSelected(rideId);
@@ -58,6 +67,12 @@ export default function SuitableRides({
 
   const handleConfirm = () => {
     if (!selected) return;
+
+    // Study mode: stop here and report the choice
+    if (onConfirmSelection) {
+      onConfirmSelection(selected);
+      return;
+    }
 
     // Shuttle and Compact require sharing preference
     if (selected === "shuttle" || selected === "compact") {
@@ -79,6 +94,7 @@ export default function SuitableRides({
   return (
     <section className="choose-ride">
       <header className="choose-header">
+        {!hideNav && (
         <button
           type="button"
           className="choose-back"
@@ -87,6 +103,7 @@ export default function SuitableRides({
         >
           <ArrowLeft size={24} strokeWidth={2.3} />
         </button>
+        )}
 
         <h1>Choose your ride</h1>
       </header>
@@ -101,6 +118,7 @@ export default function SuitableRides({
             <small>Est. 6min · 2.4km</small>
           </div>
 
+          {!hideNav && !hideEdit && (
           <button
             type="button"
             className="choose-edit"
@@ -108,6 +126,7 @@ export default function SuitableRides({
           >
             Edit
           </button>
+          )}
         </div>
 
         {hasTravelNeeds && (

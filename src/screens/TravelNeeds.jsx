@@ -26,13 +26,16 @@ export default function TravelNeeds({
   toggleNeed,
   onBack,
   onContinue,
+  hideBack = false, // study mode
 }) {
   return (
     <section className="needs">
       <header>
-        <button onClick={onBack} aria-label="Back">
-          <ArrowLeft size={26} />
-        </button>
+        {!hideBack && (
+          <button onClick={onBack} aria-label="Back">
+            <ArrowLeft size={26} />
+          </button>
+        )}
         <h2>Your Travel Needs</h2>
       </header>
       <p>Tell us what you need. We’ll suggest the right vehicle. (Optional)</p>
